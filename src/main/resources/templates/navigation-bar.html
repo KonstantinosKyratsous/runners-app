@@ -1,0 +1,124 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:fragment="navbar (template, title)">
+<head>
+    <title th:include="${title}"></title>
+
+    <link rel="icon" th:href="@{/resources/icons/runners-square.png}">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
+    <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+    <script th:src="@{/resources/js/scripts.js}"></script>
+</head>
+<style>
+    ::-webkit-scrollbar {
+        width: .45rem;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background-color: rgba(27, 27, 27, .4);
+        border-radius: 3px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: transparent;
+    }
+</style>
+<body style="background-color:#f3f5f6">
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark py-2 shadow" id="navbar_top">
+    <div class="container-fluid">
+        <a class="navbar-brand" onclick="location.href='/';" style="cursor: pointer">
+            <img src="/resources/icons/runners.png" alt="Runners" height="35">
+        </a>
+
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="/races">Races</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="/exercises">Exercises</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="/diets">Diets</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="/products">Products</a>
+            </li>
+        </ul>
+
+        <div style="float: right">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent"
+                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+                    <li class="nav-item" th:if="${#authentication.getPrincipal() == 'anonymousUser'}">
+                        <a class="nav-link active" aria-current="page" href="/login">Log In</a>
+                    </li>
+                    <li class="nav-item" th:if="${#authentication.getPrincipal() == 'anonymousUser'}">
+                        <a class="nav-link active" aria-current="page" href="/signup">Sign Up</a>
+                    </li>
+
+                    <div th:unless="${#authentication.getPrincipal() == 'anonymousUser'}">
+                        <a class="nav-link dropdown-toggle" href="" id="navbarDarkDropdownMenuLink"
+                           role="button"
+                           data-bs-toggle="dropdown" aria-expanded="false"
+                           th:text="${#authentication.getName()}">
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark"
+                            aria-labelledby="navbarDarkDropdownMenuLink">
+                            <li><a class="dropdown-item" href="/">Home</a></li>
+                            <li><a class="dropdown-item" href="/user">My Profile</a></li>
+                            <li><a class="dropdown-item" href="/my-races/new"
+                                   th:if="${#authentication.getAuthorities()[0].getAuthority() == 'ORGANIZER'}">
+                                Create Race</a></li>
+                            <li><a class="dropdown-item" href="/my-races"
+                                   th:if="${#authentication.getAuthorities()[0].getAuthority() == 'ORGANIZER'}">
+                                My Races
+                            </a></li>
+                            <li><a class="dropdown-item" href="/my-diets"
+                                   th:if="${#authentication.getAuthorities()[0].getAuthority() == 'NUTRITIONIST'}">
+                                My Diets
+                            </a></li>
+                            <li><a class="dropdown-item" href="/my-diets/new"
+                                   th:if="${#authentication.getAuthorities()[0].getAuthority() == 'NUTRITIONIST'}">
+                                Create Diet
+                            </a></li>
+                            <li><a class="dropdown-item" href="/my-exercises"
+                                   th:if="${#authentication.getAuthorities()[0].getAuthority() == 'COACH'}">
+                                My Exercises
+                            </a></li>
+                            <li><a class="dropdown-item" href="/my-exercises/new"
+                                   th:if="${#authentication.getAuthorities()[0].getAuthority() == 'COACH'}">
+                                Create Exercise
+                            </a></li>
+                            <li><a class="dropdown-item" href="/my-products"
+                                   th:if="${#authentication.getAuthorities()[0].getAuthority() == 'COACH'}">
+                                Apparel
+                            </a></li>
+                            <li><a class="dropdown-item" href="/my-products/new"
+                                   th:if="${#authentication.getAuthorities()[0].getAuthority() == 'COACH'}">
+                                Add Apparel
+                            </a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="/logout">Logout</a></li>
+                        </ul>
+                    </div>
+                </ul>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<th:block th:include="${template}"/>
+
+
+</body>
+</html>

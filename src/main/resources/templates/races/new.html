@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{navigation-bar :: navbar (~{::body}, ~{::title})}">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Race</title>
+</head>
+<body>
+
+<div class="container my-2">
+    <div class="row d-flex justify-content-center h-100">
+        <div class="col-12 col-md-9 col-lg-7 col-xl-7">
+            <div class="card shadow p-3 mb-5 bg-body rounded" style="border-radius: 15px;">
+                <div class="card-body p-5">
+                    <h2 class="text-uppercase text-center mb-5"> Create Race </h2>
+                    <form th:action="@{/my-races/new}" th:object="${race}" method="post">
+                        <div class="form-outline mb-4">
+                            <input required
+                                   type="text"
+                                   class="form-control form-control-lg"
+                                   th:field="*{title}"
+                                   placeholder="Race Title">
+                        </div>
+                        <div class="form-outline mb-4">
+                            <select class="form-control form-control-lg" th:field="*{location}">
+                                <option value="" selected hidden>Choose the city</option>
+                                <div th:each="city: ${cities}">
+                                    <option th:value="${city}" th:text="${city}"></option>
+                                </div>
+                            </select>
+                            <!--                        <input required-->
+                            <!--                               type="text"-->
+                            <!--                               class="form-control form-control-lg"-->
+                            <!--                               th:field="*{location}"-->
+                            <!--                               placeholder="Location (ex. Ioannina, Greece)">-->
+                        </div>
+                        <div class="form-outline mb-4">
+                            <input required
+                                   type="date"
+                                   class="form-control form-control-lg"
+                                   th:field="*{date}"
+                                   placeholder="Date">
+                        </div>
+                        <div class="form-outline mb-4">
+                            <input required
+                                   th:type="number"
+                                   class="form-control form-control-lg"
+                                   th:field="*{price}"
+                                   placeholder="Ticket Price">
+                        </div>
+                        <div class="form-outline mb-4">
+                        <textarea required
+                                  class="form-control form-control-lg"
+                                  rows="3"
+                                  th:field="*{description}"
+                                  placeholder="Description"></textarea>
+
+                        </div>
+
+                        <div class="d-flex justify-content-center">
+                            <button type="submit" class="btn"
+                                    style="display: block; width: 100%; background-color: #e9692c; color: white">Create
+                                Race
+                            </button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

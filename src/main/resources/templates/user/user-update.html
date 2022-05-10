@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{navigation-bar :: navbar (~{::body}, ~{::title})}">
+<head>
+    <meta charset="UTF-8">
+    <title>Update User's Info</title>
+</head>
+<body>
+
+<div class="container my-2">
+    <div class="row d-flex justify-content-center h-100">
+        <div class="col-12 col-md-9 col-lg-7 col-xl-7">
+            <div class="card shadow p-3 mb-5 bg-body rounded" style="border-radius: 15px;">
+                <div class="card-body p-5">
+                    <h2 class="text-uppercase text-center mb-5"> Update User's Info </h2>
+                    <form th:action="@{/user/update}" th:object="${user}" method="post">
+                        <div class="form-outline mb-4">
+                            <input required
+                                   type="text"
+                                   class="form-control form-control-lg"
+                                   th:field="*{firstName}"
+                                   placeholder="First Name">
+                        </div>
+                        <div class="form-outline mb-4">
+                            <input required
+                                   type="text"
+                                   class="form-control form-control-lg"
+                                   th:field="*{lastName}"
+                                   placeholder="Last Name">
+                        </div>
+                        <div class="form-outline mb-4">
+                            <input required disabled
+                                   type="text"
+                                   class="form-control form-control-lg"
+                                   th:field="*{username}"
+                                   placeholder="Username">
+                        </div>
+                        <div class="form-outline mb-4">
+                            <input required
+                                   type="email"
+                                   class="form-control form-control-lg"
+                                   th:field="*{email}"
+                                   placeholder="E-mail">
+                        </div>
+
+                        <div class="d-flex justify-content-center">
+                            <button type="submit" class="btn"
+                                    style="display: block; width: 100%; background-color: #e9692c; color: white">Update
+                                Info
+                            </button>
+                        </div>
+                        <p class="text-center text-muted mt-5 mb-0">Change Password
+                            <a href="change_password" class="fw-bold text-body"><u>Click here</u></a></p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

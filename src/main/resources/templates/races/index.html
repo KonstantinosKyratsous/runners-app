@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{navigation-bar :: navbar (~{::body}, ~{::title})}">
+<head>
+    <meta charset="UTF-8">
+    <title>Races</title>
+</head>
+<body>
+
+<div class="container my-2">
+
+    <div class="row my-2">
+        <div class="col-3"> <!-- Filters -->
+            <h5 class="column-header">Filters</h5><br/>
+            <form style="background-color:white; border-radius: 20px; padding: 20px; margin-right: 10px">
+                <h6>Location</h6>
+                <div th:each="location: ${locations}">
+                    <input type="checkbox" th:id="${location}" name="location" th:value="${location}">
+                    <label th:for="${location}" th:text="${location}"></label><br>
+                </div>
+                <hr/>
+                <input class="btn" type="submit" value="Submit" style="background-color: #e9692c; color: white">
+            </form>
+        </div>
+
+        <div class="col-8">
+            <div th:each="race: ${races}">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="row">
+                            <div class="col-11">
+                                <h4 class="card-title" th:text="${race.title}"></h4>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="row">
+                            <img class="col-sm-1" src="/resources/icons/location.svg" alt="Location" height="20px">
+                            <h6 class="col-3" style="left: 30px" th:text="${race.location}"></h6>
+                        </div>
+                        <div class="row">
+                            <img class="col-1" src="/resources/icons/date2.svg" alt="Date" height="20px">
+                            <h6 class="col-2" style="left: 30px" th:text="${race.date}"></h6>
+                        </div>
+
+                        <p class="card-text" th:text="${race.description}"></p>
+                        <a th:href="@{/races/{id} (id=${race.id})}">See the full race post</a>
+                    </div>
+                </div>
+                <br/>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

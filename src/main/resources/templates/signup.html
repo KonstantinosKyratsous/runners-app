@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{navigation-bar :: navbar (~{::body}, ~{::title})}">
+<head>
+    <meta charset="UTF-8">
+    <title>Sign Up</title>
+</head>
+
+<body>
+
+<div class="container my-2">
+    <div class="row d-flex justify-content-center h-100">
+        <div class="col-12 col-md-9 col-lg-7 col-xl-7">
+            <div class="card shadow p-3 mb-5 bg-body rounded" style="border-radius: 15px;">
+                <div class="card-body p-5">
+                    <h2 class="text-uppercase text-center mb-5"> Sign Up </h2>
+                    <form th:action="@{/process-signup}" th:object="${user}" method="post"
+                          onsubmit="event.preventDefault(); validateSignupForm()">
+                        <div class="form-outline mb-4">
+                            <input required
+                                   type="text"
+                                   class="form-control form-control-lg"
+                                   th:field="*{firstName}"
+                                   placeholder="First Name">
+                        </div>
+                        <div class="form-outline mb-4">
+                            <input required
+                                   type="text"
+                                   class="form-control form-control-lg"
+                                   th:field="*{lastName}"
+                                   placeholder="Last Name">
+                        </div>
+                        <div class="form-outline mb-4">
+                            <input required
+                                   type="email"
+                                   class="form-control form-control-lg"
+                                   th:field="*{email}"
+                                   placeholder="E-mail">
+                        </div>
+                        <div class="form-outline mb-4">
+                            <input required
+                                   type="text"
+                                   class="form-control form-control-lg"
+                                   th:field="*{username}"
+                                   placeholder="Username">
+                        </div>
+                        <div class="form-outline mb-4">
+                            <input required
+                                   type="password"
+                                   class="form-control form-control-lg"
+                                   id="password"
+                                   th:field="*{password}"
+                                   placeholder="Password">
+                        </div>
+                        <i id="error-message" style="color: red; font-size: 12px"></i>
+                        <div class="form-outline mb-4">
+                            <input required
+                                   type="password"
+                                   class="form-control form-control-lg"
+                                   id="password-repeat"
+                                   placeholder="Repeat Password">
+                        </div>
+
+                        <div class="form-outline mb-4">
+                            <select class="form-control form-control-lg" id="selectMenu" th:field="${authority.type}">
+                                <option value="" selected hidden>Choose your role</option>
+                                <option value="ATHLETE">Athlete</option>
+                                <option value="COACH">Coach</option>
+                                <option value="ORGANIZER">Organizer</option>
+                                <option value="NUTRITIONIST">Nutritionist</option>
+                            </select>
+                        </div>
+                        <div class="d-flex justify-content-center">
+                            <button type="submit" class="btn"
+                                    style="display: block; width: 100%; background-color: #e9692c; color: white">Sign Up
+                            </button>
+                        </div>
+
+                        <p class="text-center text-muted mt-5 mb-0">Have already an account?
+                            <a href="login" class="fw-bold text-body"><u>Login here</u></a></p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>

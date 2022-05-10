@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{navigation-bar :: navbar (~{::body}, ~{::title})}">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+</head>
+<body>
+
+<div class="container my-2">
+    <div class="row d-flex justify-content-center h-100">
+        <div class="col-12 col-md-9 col-lg-7 col-xl-7">
+            <div class="card shadow p-3 mb-5 bg-body rounded" style="border-radius: 15px;">
+                <div class="card-body p-5">
+                    <h2 class="text-uppercase text-center mb-5"> Login </h2>
+                    <p th:if="${loginError}" class="alert alert-danger text-center">Wrong username or password</p>
+                    <form th:action="@{/process-login}" method="post">
+
+                        <div class="form-outline mb-4">
+                            <input required
+                                   class="form-control form-control-lg"
+                                   type="text"
+                                   name="username"
+                                   placeholder="Username"/>
+                        </div>
+                        <div class="form-outline mb-4">
+                            <input required
+                                   class="form-control form-control-lg"
+                                   type="password"
+                                   name="password"
+                                   placeholder="Password"/>
+                        </div>
+
+                        <div class="d-flex justify-content-center">
+                            <button type="submit" class="btn"
+                                    style="display: block; width: 100%; background-color: #e9692c; color: white">Login
+                            </button>
+                        </div>
+
+                        <p class="text-center text-muted mt-5 mb-0">
+                            Don't you have an account?
+                            <a href="signup" class="fw-bold text-body"><u>Sign up here</u></a>
+                        </p>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
