@@ -8,13 +8,13 @@
 
 <div class="container my-2">
     <div class="row">
-        <div class="col-3"> <!-- Filters -->
+        <div class="col-3" style="box-shadow: 2px 0 0 0 #888"> <!-- Filters -->
             <h5 class="column-header">Filters</h5><br/>
             <form style="background-color:white; border-radius: 20px; padding: 20px; margin-right: 10px">
                 <h6>Product Type</h6>
                 <div th:each="type: ${types}">
-                    <input type="checkbox" th:id="${type}" name="type" th:value="${type}">
-                    <label th:for="${type}" th:text="${type}"></label><br>
+                    <input type="checkbox" name="type" th:value="${type}" class="checkbox" th:text="${type}"
+                           onclick="filterProductResults()">
                 </div>
                 <hr/>
                 <input class="btn" type="submit" value="Submit" style="background-color: #e9692c; color: white">
@@ -24,12 +24,13 @@
         <div class="col-8">
             <h5 class="column-header">Results</h5><br/>
             <div class="row">
-                <div style="width: auto" th:each="product: ${products}">
+                <div class="result" style="width: auto" th:each="product: ${products}">
                     <div class="card" style="padding: 10px; height: min-content; width: min-content">
                         <img th:src="@{/products/{id}/image (id=${product.id})}" width="200" height="200"
                              style="background-color: #ccc">
-                        <h6 th:text="${product.name}"></h6>
+                        <a th:text="${product.name}" th:href="@{/products/{id} (id=${product.id})}"></a>
                         <a th:text="${product.price} + '€'"></a>
+                        <a class="product-type" th:text="${product.type}" hidden></a>
                     </div>
                     <br/>
                 </div>

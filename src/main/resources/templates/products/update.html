@@ -12,49 +12,53 @@
             <div class="card shadow p-3 mb-5 bg-body rounded" style="border-radius: 15px;">
                 <div class="card-body p-5">
                     <h2 class="text-uppercase text-center mb-5"> Update Product </h2>
-                    <form th:action="@{/my-products/{id}/update (id=${product.id})}" th:object="${product}"
-                          method="post">
+                    <form th:action="@{/my-products/{id}/update (id=${product.id})}" method="post" enctype="multipart/form-data">
                         <div class="form-outline mb-4">
                             <input required
                                    type="text"
                                    class="form-control form-control-lg"
-                                   th:field="*{name}"
+                                   name="name"
+                                   th:field="${product.name}"
                                    placeholder="Product Title">
                         </div>
                         <div class="form-outline mb-4">
                             <input required
                                    type="text"
                                    class="form-control form-control-lg"
-                                   th:field="*{type}"
+                                   name="type"
+                                   th:field="${product.type}"
                                    placeholder="Product Type">
                         </div>
                         <div class="form-outline mb-4">
                             <input required
                                    type="number"
                                    class="form-control form-control-lg"
-                                   th:field="*{price}"
+                                   name="price"
+                                   th:field="${product.price}"
                                    placeholder="Average Price">
                         </div>
                         <div class="form-outline mb-4">
-                            <input required id="inputImage"
+                            <input
                                    type="file"
+                                   accept="image/*"
                                    class="form-control form-control-lg"
-                                   th:field="*{image}"
-                                   placeholder="Image of the product">
+                                   th:field="${product.image}"
+                                   name="image">
                         </div>
                         <div class="form-outline mb-4">
                         <textarea required
                                   class="form-control form-control-lg"
                                   rows="3"
-                                  th:field="*{description}"
+                                  name="description"
+                                  th:field="${product.description}"
                                   placeholder="Description"></textarea>
 
                         </div>
 
                         <div class="d-flex justify-content-center">
                             <button type="submit" class="btn"
-                                    style="display: block; width: 100%; background-color: #e9692c; color: white">Update
-                                Product
+                                    style="display: block; width: 100%; background-color: #e9692c; color: white">
+                                Update Product
                             </button>
                         </div>
 

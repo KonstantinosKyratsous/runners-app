@@ -12,59 +12,50 @@
             <div class="card shadow p-3 mb-5 bg-body rounded" style="border-radius: 15px;">
                 <div class="card-body p-5">
                     <h2 class="text-uppercase text-center mb-5"> Create Product </h2>
-                    <form th:action="@{/my-products/new}" th:object="${product}" method="post">
+                    <form th:action="@{/my-products/new}" method="post" enctype="multipart/form-data">
                         <div class="form-outline mb-4">
                             <input required
                                    type="text"
                                    class="form-control form-control-lg"
-                                   th:field="*{name}"
+                                   name="name"
                                    placeholder="Product Title">
                         </div>
                         <div class="form-outline mb-4">
                             <input required
                                    type="text"
                                    class="form-control form-control-lg"
-                                   th:field="*{type}"
+                                   name="type"
                                    placeholder="Product Type">
                         </div>
                         <div class="form-outline mb-4">
                             <input required
                                    type="number"
                                    class="form-control form-control-lg"
-                                   th:field="*{price}"
+                                   name="price"
                                    placeholder="Average Price">
                         </div>
                         <div class="form-outline mb-4">
-                            <!--<input required id="inputImage"
-                                   type="file"
-                                   class="form-control form-control-lg"
-                                   th:field="*{image}"
-                                   placeholder="Image of the product">-->
-
                             <input required
                                    type="file"
                                    accept="image/*"
                                    class="form-control form-control-lg"
                                    name="image"
-                                   th:object="${image}"
-                                   id="file"
-                                   onchange="loadFile(event)">
-                            <img id="output" width="200" th:field="*{image}"/>
+                                   id="image">
 
                         </div>
                         <div class="form-outline mb-4">
                         <textarea required
                                   class="form-control form-control-lg"
                                   rows="3"
-                                  th:field="*{description}"
+                                  name="description"
                                   placeholder="Description"></textarea>
 
                         </div>
 
                         <div class="d-flex justify-content-center">
                             <button type="submit" class="btn"
-                                    style="display: block; width: 100%; background-color: #e9692c; color: white">Create
-                                Product
+                                    style="display: block; width: 100%; background-color: #e9692c; color: white">
+                                Create Product
                             </button>
                         </div>
 

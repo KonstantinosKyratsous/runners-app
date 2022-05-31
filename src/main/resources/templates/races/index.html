@@ -9,13 +9,13 @@
 <div class="container my-2">
 
     <div class="row my-2">
-        <div class="col-3"> <!-- Filters -->
+        <div class="col-3" style="box-shadow: 2px 0 0 0 #888"> <!-- Filters -->
             <h5 class="column-header">Filters</h5><br/>
             <form style="background-color:white; border-radius: 20px; padding: 20px; margin-right: 10px">
                 <h6>Location</h6>
                 <div th:each="location: ${locations}">
-                    <input type="checkbox" th:id="${location}" name="location" th:value="${location}">
-                    <label th:for="${location}" th:text="${location}"></label><br>
+                    <input type="checkbox" name="location" th:value="${location}" class="checkbox"
+                           th:text="${location}" onclick="filterLocationResults()">
                 </div>
                 <hr/>
                 <input class="btn" type="submit" value="Submit" style="background-color: #e9692c; color: white">
@@ -23,8 +23,9 @@
         </div>
 
         <div class="col-8">
-            <div th:each="race: ${races}">
-                <div class="card">
+            <h5 class="column-header">Results</h5><br/>
+            <div class="result" th:each="race: ${races}">
+                <div class="card"> <!--th:if="${#httpServletRequest.requestURI.contains(race.location)}"-->
                     <div class="card-header">
                         <div class="row">
                             <div class="col-11">
@@ -36,7 +37,7 @@
                     <div class="card-body">
                         <div class="row">
                             <img class="col-sm-1" src="/resources/icons/location.svg" alt="Location" height="20px">
-                            <h6 class="col-3" style="left: 30px" th:text="${race.location}"></h6>
+                            <h6 class="col-3 race-location" style="left: 30px" th:text="${race.location}"></h6>
                         </div>
                         <div class="row">
                             <img class="col-1" src="/resources/icons/date2.svg" alt="Date" height="20px">

@@ -15,11 +15,9 @@ import java.util.Set;
 public class RaceServiceImpl implements RaceService{
 
     private final RaceRepository raceRepository;
-    private final UserService userService;
 
     public RaceServiceImpl(RaceRepository raceRepository, UserService userService) {
         this.raceRepository = raceRepository;
-        this.userService = userService;
     }
 
     @Override

@@ -12,8 +12,7 @@ function validateSignupForm() {
         pass.style.border = "2px solid red";
         passRep.style.border = "2px solid red";
         document.getElementById("error-message").innerText = "Passwords don't match. ";
-    }
-    else {
+    } else {
         pass.style.border = "";
         passRep.style.border = "";
         document.getElementById("error-message").innerText = "";
@@ -22,8 +21,7 @@ function validateSignupForm() {
 
     if (roleOption === 'Choose your role') {
         selectMenu.style.border = "2px solid red";
-    }
-    else {
+    } else {
         selectMenu.style.border = "";
         correctOption = true;
     }
@@ -37,8 +35,8 @@ function validateSignupForm() {
 }
 
 // Makes the navbar fixed when scroll
-document.addEventListener("DOMContentLoaded", function(){
-    window.addEventListener('scroll', function() {
+document.addEventListener("DOMContentLoaded", function () {
+    window.addEventListener('scroll', function () {
         if (window.scrollY > 0) {
             document.getElementById('navbar_top').classList.add('fixed-top');
             // add padding top to show content behind navbar
@@ -61,8 +59,7 @@ function checkPasswordValidity() {
         pass.style.border = "2px solid red";
         passConf.style.border = "2px solid red";
         document.getElementById("error-message").innerText = "Passwords don't match. ";
-    }
-    else {
+    } else {
         pass.style.border = "";
         passConf.style.border = "";
         document.getElementById("error-message").innerText = "";
@@ -70,7 +67,49 @@ function checkPasswordValidity() {
     }
 }
 
-var loadFile = function(event) {
-    var image = document.getElementById('output');
-    image.src = URL.createObjectURL(event.target.files[0]);
-};
+// Filter location results
+function filterLocationResults() {
+    let checkboxes = document.getElementsByClassName("checkbox");
+    let results = document.getElementsByClassName("result");
+    let locations = [];
+
+    for (const filter of checkboxes) {
+        if (filter.checked === true)
+            locations.push(filter.value);
+    }
+
+    let isEmptyLocations = (locations.length === 0);
+
+    for (const result of results) {
+        let location = result.getElementsByClassName("race-location")[0];
+
+        result.hidden = (!locations.includes(location.innerText));
+
+        if (isEmptyLocations)
+            result.hidden = false;
+    }
+}
+
+// Filter product results
+function filterProductResults() {
+    let checkboxes = document.getElementsByClassName("checkbox");
+    let results = document.getElementsByClassName("result");
+    let types = [];
+
+    for (const filter of checkboxes) {
+        if (filter.checked === true) {
+            types.push(filter.value);
+        }
+    }
+
+    let isEmptyTypes = (types.length === 0);
+
+    for (const result of results) {
+        let type = result.getElementsByClassName("product-type")[0];
+
+        result.hidden = (!types.includes(type.innerText));
+
+        if (isEmptyTypes)
+            result.hidden = false;
+    }
+}
