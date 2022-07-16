@@ -7,9 +7,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Service
 public class RaceServiceImpl implements RaceService{
@@ -65,6 +65,7 @@ public class RaceServiceImpl implements RaceService{
         currentRace.setLocation(race.getLocation());
         currentRace.setPrice(race.getPrice());
         currentRace.setDescription(race.getDescription());
+        currentRace.setLinkToBuyTickets(race.getLinkToBuyTickets());
 
         raceRepository.save(currentRace);
     }
@@ -98,6 +99,49 @@ public class RaceServiceImpl implements RaceService{
         }
 
         return locations;
+    }
+
+    @Override
+    public Set<Race> findFilteredRaces(Map<String, String> filters) {
+        Set<Race> results = new HashSet<>();
+        Set<Race> resultsByLocation = new HashSet<>();
+        Set<Race> resultsByDate = new HashSet<>();
+
+        if (filters.get("location") != null) {
+            String[] locations = filters.get("location").split(",");
+
+            for (Race race: findAll())
+                if (Arrays.asList(locations).contains(race.getLocation()))
+                    resultsByLocation.add(race);
+        }
+
+        if (filters.get("date-range") != null) {
+            String[] dates = filters.get("date-range").split(" - ");
+            Date startDate;
+            Date endDate;
+            try {
+                startDate = new SimpleDateFormat("MM/dd/yyyy").parse(dates[0]);
+                endDate = new SimpleDateFormat("MM/dd/yyyy").parse(dates[1]);
+            } catch (ParseException e) {
+                throw new RuntimeException(e);
+            }
+
+            for (Race race: findAll()){
+                if (race.getDate().after(startDate) && race.getDate().before(endDate))
+                    resultsByDate.add(race);
+            }
+        }
+
+        if (resultsByDate.isEmpty())
+            return resultsByLocation;
+        else if (resultsByLocation.isEmpty())
+            return resultsByDate;
+        else
+            for (Race race: resultsByDate)
+                if (resultsByLocation.contains(race))
+                    results.add(race);
+
+        return results;
     }
 
     private boolean isOwnerOfRace(User user) {

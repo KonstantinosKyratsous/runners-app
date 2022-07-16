@@ -14,18 +14,22 @@
             <form style="background-color:white; border-radius: 20px; padding: 20px; margin-right: 10px">
                 <h6>Location</h6>
                 <div th:each="location: ${locations}">
-                    <input type="checkbox" name="location" th:value="${location}" class="checkbox"
-                           th:text="${location}" onclick="filterLocationResults()">
+                    <input type="checkbox" name="location" th:value="${location}" class="location"
+                           th:text="${location}">
                 </div>
                 <hr/>
-                <input class="btn" type="submit" value="Submit" style="background-color: #e9692c; color: white">
+                <h6>Date</h6>
+                <input type="text" name="date-range" value="" id="date-range"/>
+                <hr/>
+                <a class="btn" id="submit-button" style="background-color: #e9692c; color: white">Find</a>
+                <a class="btn btn-light" style="float: right" href="/races">Clear all</a>
             </form>
         </div>
 
         <div class="col-8">
             <h5 class="column-header">Results</h5><br/>
             <div class="result" th:each="race: ${races}">
-                <div class="card"> <!--th:if="${#httpServletRequest.requestURI.contains(race.location)}"-->
+                <div class="card">
                     <div class="card-header">
                         <div class="row">
                             <div class="col-11">
@@ -41,7 +45,7 @@
                         </div>
                         <div class="row">
                             <img class="col-1" src="/resources/icons/date2.svg" alt="Date" height="20px">
-                            <h6 class="col-2" style="left: 30px" th:text="${race.date}"></h6>
+                            <h6 class="col-2" style="left: 30px" th:text="${format.format(race.date)}"></h6>
                         </div>
 
                         <p class="card-text" th:text="${race.description}"></p>
@@ -53,6 +57,56 @@
         </div>
     </div>
 </div>
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+<script>
+    let clickedDate = false;
+    let startDate = "";
+    let endDate = "";
+
+    let locations = getUrlParameter("location").split(",");
+    let dateRange = getUrlParameter("date-range");
+
+    $('input[name="location"]').map(function () {
+        if (locations.includes(this.value)) {
+            this.checked = true;
+        }
+    });
+
+    if (dateRange.length > 0)
+        $('#date-range').val(dateRange);
+
+    $(function() {
+        $('input[name="date-range"]').daterangepicker({
+            opens: 'left'
+        }, function(start, end, label) {
+            clickedDate = true;
+            startDate = start.format("MM/DD/YYYY");
+            endDate = end.format("MM/DD/YYYY");;
+        });
+    });
+
+    $("#submit-button").click(function () {
+       let finalUrl = "/races?";
+
+        $(".location").map(function () {
+           if ($(this).is(":checked"))
+               finalUrl += finalUrl.includes("location")? "," + this.value: "location=" + this.value;
+        });
+
+        if (finalUrl.includes("location") && clickedDate)
+            finalUrl += "&";
+
+        if (clickedDate)
+            finalUrl += "date-range=" + startDate + " - " + endDate;
+
+        window.location.href = finalUrl;
+    });
+
+</script>
 
 </body>
 </html>

@@ -4,6 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import java.util.Date;
 
 @Entity
 @Table(name = "races")
@@ -15,22 +16,22 @@ public class Race extends BaseEntity {
     private String title;
     private String description;
     private String location;
-    //private double latitude;
-    //private double lag;
-    private String date;
+    private Date date;
     private double price;
+    private String linkToBuyTickets;
 
     public Race() {
 
     }
 
-    public Race(User organizer, String title, String description, String location, String date, double price) {
+    public Race(User organizer, String title, String description, String location, Date date, double price, String linkToBuyTickets) {
         this.organizer = organizer;
         this.title = title;
         this.description = description;
         this.location = location;
         this.date = date;
         this.price = price;
+        this.linkToBuyTickets = linkToBuyTickets;
     }
 
     public User getOrganizer() {
@@ -65,11 +66,11 @@ public class Race extends BaseEntity {
         this.location = location;
     }
 
-    public String getDate() {
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(Date date) {
         this.date = date;
     }
 
@@ -79,5 +80,13 @@ public class Race extends BaseEntity {
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    public String getLinkToBuyTickets() {
+        return linkToBuyTickets;
+    }
+
+    public void setLinkToBuyTickets(String linkToBuyTickets) {
+        this.linkToBuyTickets = linkToBuyTickets;
     }
 }

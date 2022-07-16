@@ -1,6 +1,8 @@
 package com.kyratsous.runnersapp.controllers;
 
 import com.kyratsous.runnersapp.model.Diet;
+import com.kyratsous.runnersapp.model.DietRating;
+import com.kyratsous.runnersapp.services.DietRatingService;
 import com.kyratsous.runnersapp.services.DietService;
 import com.kyratsous.runnersapp.services.UserService;
 import org.springframework.stereotype.Controller;
@@ -15,10 +17,12 @@ public class DietController {
 
     private final DietService dietService;
     private final UserService userService;
+    private final DietRatingService dietRatingService;
 
-    public DietController(DietService dietService, UserService userService) {
+    public DietController(DietService dietService, UserService userService, DietRatingService dietRatingService) {
         this.dietService = dietService;
         this.userService = userService;
+        this.dietRatingService = dietRatingService;
     }
 
     @RequestMapping("/diets")
@@ -26,6 +30,15 @@ public class DietController {
         model.addAttribute("diets", dietService.findAll());
 
         return "diets/index";
+    }
+
+    @RequestMapping("/diets/{id}")
+    public String showDiet(@PathVariable Long id, Model model) {
+        model.addAttribute("diet", dietService.findById(id));
+        model.addAttribute("ratings", dietRatingService.findAllByDietId(id));
+        model.addAttribute("newRating", new DietRating());
+
+        return "diets/show";
     }
 
     @RequestMapping("/my-diets")
@@ -46,10 +59,7 @@ public class DietController {
     @PostMapping("/my-diets/new")
     public String createDiet(@ModelAttribute("diet") Diet diet) {
         diet.setNutritionist(userService.getCurrentUser());
-
-        //Change the format
-        Date date = new Date();
-        diet.setDate(date.toString());
+        diet.setDate(new Date());
 
         dietService.save(diet);
         return "redirect:/my-diets";
@@ -78,5 +88,22 @@ public class DietController {
     public String deleteDiet(@PathVariable Long id) {
         dietService.deleteById(id);
         return "redirect:/my-diets";
+    }
+
+    @PostMapping("/diets/{id}/rating")
+    public String addDietRating(@PathVariable Long id, @ModelAttribute DietRating dietRating) {
+        dietRating.setUser(userService.getCurrentUser());
+        dietRating.setDiet(dietService.findById(id));
+
+        dietRatingService.save(dietRating);
+
+        return "redirect:/diets/" + id;
+    }
+
+    @GetMapping("/diets/{id}/rating/{rate_id}/delete")
+    public String deleteExerciseRating(@PathVariable Long id, @PathVariable Long rate_id) {
+        dietRatingService.deleteById(rate_id);
+
+        return "redirect:/diets/" + id;
     }
 }

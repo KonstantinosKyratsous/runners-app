@@ -7,9 +7,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -44,7 +42,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void deleteById(Long id) {
-        if (!isOwnerOfProduct(findById(id).getCoach())) {
+        if (isNotOwnerOfProduct(findById(id).getCoach())) {
             System.out.println("You cannot delete this product. You are not the owner of this product. ");
             return;
         }
@@ -55,7 +53,7 @@ public class ProductServiceImpl implements ProductService {
     public void update(Product product) {
         Product currentProduct = findById(product.getId());
 
-        if (!isOwnerOfProduct(currentProduct.getCoach())) {
+        if (isNotOwnerOfProduct(currentProduct.getCoach())) {
             System.out.println("You cannot delete this product. You are not the owner of this product. ");
             return;
         }
@@ -74,7 +72,7 @@ public class ProductServiceImpl implements ProductService {
         Set<Product> products = new HashSet<>();
 
         if (user != null) {
-            for (Product product: findAll()) {
+            for (Product product : findAll()) {
                 if (Objects.equals(product.getCoach().getId(), user.getId())) {
                     products.add(product);
                 }
@@ -90,7 +88,7 @@ public class ProductServiceImpl implements ProductService {
         Set<String> productTypes = new HashSet<>();
 
         if (!products.isEmpty()) {
-            for (Product product: products) {
+            for (Product product : products) {
                 if (!productTypes.contains(product.getType())) {
                     productTypes.add(product.getType());
                 }
@@ -100,9 +98,44 @@ public class ProductServiceImpl implements ProductService {
         return productTypes;
     }
 
-    private boolean isOwnerOfProduct(User user) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    @Override
+    public Set<Product> findFilteredProducts(Map<String, String> filters) {
+        Set<Product> results = new HashSet<>();
+        Set<Product> resultsByType = new HashSet<>();
+        Set<Product> resultsByPrice = new HashSet<>();
 
-        return Objects.equals(auth.getName(), user.getUsername());
+        if (filters.get("type") != null) {
+            String[] types = filters.get("type").split(",");
+
+            for (Product product : findAll())
+                if (Arrays.asList(types).contains(product.getType()))
+                    resultsByType.add(product);
+        }
+
+        if (filters.get("price") != null) {
+            String[] prices = filters.get("price").split(",");
+            double minPrice = Double.parseDouble(prices[0]);
+            double maxPrice = Double.parseDouble(prices[1]);
+
+            for (Product product : findAll())
+                if (product.getPrice() >= minPrice && product.getPrice() <= maxPrice)
+                    resultsByPrice.add(product);
+        }
+
+        if (resultsByType.isEmpty())
+            return resultsByPrice;
+        else if (resultsByPrice.isEmpty())
+            return resultsByType;
+        else
+            for (Product product : resultsByType)
+                if (resultsByPrice.contains(product))
+                    results.add(product);
+
+        return results;
+    }
+
+    private boolean isNotOwnerOfProduct(User user) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        return !Objects.equals(auth.getName(), user.getUsername());
     }
 }

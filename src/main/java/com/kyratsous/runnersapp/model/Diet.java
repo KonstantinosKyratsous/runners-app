@@ -4,6 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import java.util.Date;
 
 @Entity
 @Table(name = "diets")
@@ -11,7 +12,7 @@ public class Diet extends BaseEntity{
 
     private String title;
     private String body;
-    private String date;
+    private Date date;
 
     @ManyToOne
     @JoinColumn(name = "nutritionist_id")
@@ -21,7 +22,7 @@ public class Diet extends BaseEntity{
 
     }
 
-    public Diet(String title, String body, String date, User nutritionist) {
+    public Diet(String title, String body, Date date, User nutritionist) {
         this.title = title;
         this.body = body;
         this.date = date;
@@ -44,11 +45,11 @@ public class Diet extends BaseEntity{
         this.body = body;
     }
 
-    public String getDate() {
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(Date date) {
         this.date = date;
     }
 

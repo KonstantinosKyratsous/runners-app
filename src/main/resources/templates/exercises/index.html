@@ -21,7 +21,7 @@
 
             <div class="card-body">
                 <p class="card-text" th:text="${exercise.body}"></p>
-                <a href="#">See the full exercise post</a>
+                <a th:href="@{/exercises/{id} (id=${exercise.id})}">See the full exercise post</a>
             </div>
         </div>
         <br/>

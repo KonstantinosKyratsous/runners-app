@@ -113,3 +113,41 @@ function filterProductResults() {
             result.hidden = false;
     }
 }
+
+// Rate with stars
+jQuery(document).ready(function ($) {
+    $(".btn-rating").on('click', (function () {
+
+        let previous_value = $("#selected_rating").val();
+
+        let selected_value = $(this).attr("data-attr");
+        $("#selected_rating").val(selected_value);
+
+        $(".selected-rating").empty().html(selected_value);
+
+        for (let i = 1; i <= selected_value; ++i) {
+            $("#rating-star-" + i).toggleClass('btn-warning').toggleClass('btn-default');
+        }
+
+        for (let ix = 1; ix <= previous_value; ++ix) {
+            $("#rating-star-" + ix).toggleClass('btn-warning').toggleClass('btn-default');
+        }
+    }));
+});
+
+// Get filter results
+function getUrlParameter(sParam) {
+    let sPageURL = window.location.search.substring(1),
+        sURLVariables = sPageURL.split('&'),
+        sParameterName,
+        i;
+
+    for (i = 0; i < sURLVariables.length; i++) {
+        sParameterName = sURLVariables[i].split('=');
+
+        if (sParameterName[0] === sParam) {
+            return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+        }
+    }
+    return "";
+};

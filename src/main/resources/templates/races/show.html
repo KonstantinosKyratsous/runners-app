@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{navigation-bar :: navbar (~{::body}, ~{::title})}">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+
+<div class="container my-2">
+    <div class="row">
+        <div class="col-7 custom-frame">
+            <h3 th:text="${race.title}" id="race_title"></h3>
+            <br/>
+            <p th:text="${race.description}" th:align="justify"></p>
+        </div>
+
+        <div class="col-3 custom-frame"
+             style="height: max-content; margin-left: 10px; font-size: 150%; text-align: right; align-content: center">
+            <span th:text="${race.location} + ', Greece'"></span>
+            <img src="/resources/icons/location.svg" width="21" alt="location">
+            <br/>
+            <span th:text="${race.date}"></span>
+            <img src="/resources/icons/date.svg" alt="date" width="21">
+            <br/>
+            <span th:text="${race.price} + '€'"></span>
+            <img src="/resources/icons/coin.svg" alt="date" width="21">
+            <br/>
+            <a th:unless="${race.linkToBuyTickets.isEmpty()}" th:href="${race.linkToBuyTickets}" target="_blank" class="btn" style="background-color: #e9692c; color: white;">
+                Buy tickets</a>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    document.title = document.getElementById("race_title").innerText;
+</script>
+
+</body>
+</html>

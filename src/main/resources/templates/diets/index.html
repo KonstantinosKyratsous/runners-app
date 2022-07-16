@@ -24,7 +24,7 @@
                 </div>
 
                 <p class="card-text" th:text="${diet.body}"></p>
-                <a href="#">See the full diet post</a>
+                <a th:href="@{/diets/{id} (id=${diet.id})}">See the full diet post</a>
             </div>
         </div>
         <br/>

@@ -1,6 +1,8 @@
 package com.kyratsous.runnersapp.controllers;
 
 import com.kyratsous.runnersapp.model.Product;
+import com.kyratsous.runnersapp.model.ProductRating;
+import com.kyratsous.runnersapp.services.ProductRatingService;
 import com.kyratsous.runnersapp.services.ProductService;
 import com.kyratsous.runnersapp.services.UserService;
 import org.springframework.stereotype.Controller;
@@ -11,21 +13,24 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Map;
 
 @Controller
 public class ProductController {
 
     private final ProductService productService;
     private final UserService userService;
+    private final ProductRatingService productRatingService;
 
-    public ProductController(ProductService productService, UserService userService) {
+    public ProductController(ProductService productService, UserService userService, ProductRatingService productRatingService) {
         this.productService = productService;
         this.userService = userService;
+        this.productRatingService = productRatingService;
     }
 
     @RequestMapping("/products")
-    public String getAllProducts(Model model) {
-        model.addAttribute("products", productService.findAll());
+    public String getProducts(Model model, @RequestParam(required=false) Map<String,String> filters) {
+        model.addAttribute("products", filters.isEmpty()? productService.findAll(): productService.findFilteredProducts(filters));
         model.addAttribute("types", productService.findProductTypes());
 
         return "products/index";
@@ -34,6 +39,8 @@ public class ProductController {
     @RequestMapping("/products/{id}")
     public String showProduct(Model model, @PathVariable Long id) {
         model.addAttribute("product", productService.findById(id));
+        model.addAttribute("ratings", productRatingService.findAllByProductId(id));
+        model.addAttribute("newRating", new ProductRating());
 
         return "products/show";
     }
@@ -117,5 +124,24 @@ public class ProductController {
         o.write(imageData);
         o.flush();
         o.close();
+    }
+
+    @PostMapping("/products/{id}/rating")
+    public String addProductRating(@PathVariable Long id, @ModelAttribute("newRating") ProductRating rating) {
+        rating.setUser(userService.getCurrentUser());
+        rating.setProduct(productService.findById(id));
+        productRatingService.save(rating);
+
+        return "redirect:/products/" + id;
+    }
+
+    @GetMapping("/products/{id}/rating/{rate_id}/delete")
+    public String deleteProductRating(@PathVariable Long id, @PathVariable Long rate_id) {
+
+        // Move to service
+        if (userService.getCurrentUser() != null && productRatingService.findById(rate_id).getUser().getUsername().contentEquals(userService.getCurrentUser().getUsername()))
+            productRatingService.deleteById(rate_id);
+
+        return "redirect:/products/" + id;
     }
 }

@@ -17,7 +17,7 @@
                         <h4 class="card-title" th:text="${race.title}"></h4>
                     </div>
                     <div class="col-1" style="align-content: end">
-                        <a th:href="@{/races/{id}/update (id=${race.id})}">
+                        <a th:href="@{/my-races/{id}/update (id=${race.id})}">
                             <img src="/resources/icons/edit.svg" width="20" alt="UpdateButton"></a>
                         <a type="button" data-bs-toggle="modal"
                            th:attr="data-bs-target='#deleteModal'+${race.id}">
@@ -43,7 +43,7 @@
                                             Cancel
                                         </button>
                                         <a type="button" class="btn btn-danger"
-                                           th:href="@{/races/{id}/delete (id=${race.id})}">Delete</a>
+                                           th:href="@{/my-races/{id}/delete (id=${race.id})}">Delete</a>
                                     </div>
                                 </div>
                             </div>

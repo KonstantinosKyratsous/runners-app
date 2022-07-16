@@ -10,14 +10,30 @@
     <div class="row">
         <div class="col-3" style="box-shadow: 2px 0 0 0 #888"> <!-- Filters -->
             <h5 class="column-header">Filters</h5><br/>
-            <form style="background-color:white; border-radius: 20px; padding: 20px; margin-right: 10px">
+            <form action="/products?" method="get"
+                  style="background-color:white; border-radius: 20px; padding: 20px; margin-right: 10px"
+                  id="filter-form">
                 <h6>Product Type</h6>
                 <div th:each="type: ${types}">
-                    <input type="checkbox" name="type" th:value="${type}" class="checkbox" th:text="${type}"
-                           onclick="filterProductResults()">
+                    <input type="checkbox" name="type" th:value="${type}" th:text="${type}" class="product-type">
                 </div>
                 <hr/>
-                <input class="btn" type="submit" value="Submit" style="background-color: #e9692c; color: white">
+                <div>
+                    <h6>Price</h6>
+                    <div class="row">
+                        <div class="col-6">
+                            <span>Min</span>
+                            <input type="number" min="0" th:value="0" name="price" id="min-price" style="width: 100%">
+                        </div>
+                        <div class="col-6">
+                            <span>Max</span>
+                            <input type="number" min="0" name="price" id="max-price" style="width: 100%">
+                        </div>
+                    </div>
+                </div>
+                <hr/>
+                <a class="btn" id="submit-button" style="background-color: #e9692c; color: white">Find</a>
+                <a class="btn btn-light" style="float: right" href="/products">Clear all</a>
             </form>
         </div>
 
@@ -25,12 +41,12 @@
             <h5 class="column-header">Results</h5><br/>
             <div class="row">
                 <div class="result" style="width: auto" th:each="product: ${products}">
-                    <div class="card" style="padding: 10px; height: min-content; width: min-content">
+                    <div class="card" style="padding: 10px; height: min-content; width: 222px; cursor: pointer; white-space: nowrap; overflow: hidden;"
+                         th:onclick="'window.location.href = \'' + @{/products/{id} (id=${product.id})} + '\''">
                         <img th:src="@{/products/{id}/image (id=${product.id})}" width="200" height="200"
                              style="background-color: #ccc">
-                        <a th:text="${product.name}" th:href="@{/products/{id} (id=${product.id})}"></a>
+                        <strong th:text="${product.name}"></strong>
                         <a th:text="${product.price} + '€'"></a>
-                        <a class="product-type" th:text="${product.type}" hidden></a>
                     </div>
                     <br/>
                 </div>
@@ -38,6 +54,43 @@
         </div>
     </div>
 </div>
+
+<script>
+    let types = getUrlParameter("type").split(",");
+    let prices = getUrlParameter("price").split(",");
+
+    $('input[name="type"]').map(function () {
+        if (types.includes(this.value)) {
+            this.checked = true;
+        }
+    });
+
+    if (prices.length === 2) {
+        $('#min-price').val(prices[0]);
+        $('#max-price').val(prices[1]);
+    }
+
+    $("#submit-button").click(function () {
+        let finalUrl = "/products?";
+
+        $(".product-type").map(function () {
+            if ($(this).is(":checked"))
+                finalUrl += finalUrl.includes("type") ? "," + this.value : "type=" + this.value;
+        });
+
+        let priceUrl = finalUrl.includes("type") ? "&price=" : "price=";
+
+        if ($("#min-price").val() && $("#max-price").val())
+            finalUrl += priceUrl + $("#min-price").val() + "," + $("#max-price").val();
+        else if (!$("#min-price").val() && $("#max-price").val())
+            finalUrl += priceUrl + "0," + $("#max-price").val();
+        else if ($("#min-price").val() && !$("#max-price").val())
+            if ($("#min-price").val() > 0)
+                finalUrl += priceUrl + $("#min-price").val() + ",100000";
+
+        window.location.href = finalUrl;
+    });
+</script>
 
 </body>
 </html>

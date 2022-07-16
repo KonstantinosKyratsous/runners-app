@@ -13,8 +13,11 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class RaceController {
@@ -28,10 +31,10 @@ public class RaceController {
     }
 
     @RequestMapping("/races")
-    public String getAllRaces(Model model) {
-        model.addAttribute("races", raceService.findAll());
+    public String getAllRaces(Model model, @RequestParam(required=false) Map<String,String> filters) {
+        model.addAttribute("races", filters.isEmpty()? raceService.findAll(): raceService.findFilteredRaces(filters));
         model.addAttribute("locations", raceService.findRaceLocations());
-
+        model.addAttribute("format", new SimpleDateFormat("dd/MM/yyyy"));
         return "races/index";
     }
 
@@ -52,8 +55,12 @@ public class RaceController {
     }
 
     @PostMapping("/my-races/new")
-    public String createRace(@ModelAttribute("race") Race race) {
+    public String createRace(@ModelAttribute("race") Race race, @RequestParam("dateString") String date) throws ParseException {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        race.setDate(format.parse(date));
 
+        String link = correctLinkToBuyTickets(race.getLinkToBuyTickets());
+        race.setLinkToBuyTickets(link);
         race.setOrganizer(userService.getCurrentUser());
 
         raceService.save(race);
@@ -64,12 +71,17 @@ public class RaceController {
     public String updateRaceForm(@PathVariable Long id, Model model) {
         Race race = raceService.findById(id);
         model.addAttribute("race", race);
-
+        model.addAttribute("format", new SimpleDateFormat("yyyy-MM-dd"));
         return "races/update";
     }
 
     @PostMapping("/my-races/{id}/update")
-    public String updateRace(@PathVariable Long id, @ModelAttribute("race") Race race) {
+    public String updateRace(@PathVariable Long id, @ModelAttribute("race") Race race, @RequestParam("dateString") String date) throws ParseException {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        race.setDate(format.parse(date));
+
+        String link = correctLinkToBuyTickets(race.getLinkToBuyTickets());
+        race.setLinkToBuyTickets(link);
         raceService.update(race);
         return "redirect:/my-races";
     }
@@ -78,6 +90,13 @@ public class RaceController {
     public String deleteRace(@PathVariable Long id) {
         raceService.deleteById(id);
         return "redirect:/my-races";
+    }
+
+    @RequestMapping("/races/{id}")
+    public String showRace(@PathVariable Long id, Model model) {
+        model.addAttribute("race", raceService.findById(id));
+
+        return "races/show";
     }
 
     private List<String> getCities() throws IOException, URISyntaxException {
@@ -96,5 +115,22 @@ public class RaceController {
             cities.add(city);
 
         return cities;
+    }
+
+    private String correctLinkToBuyTickets(String linkToBuyTickets) {
+        if (linkToBuyTickets.isEmpty())
+            return linkToBuyTickets;
+
+        String correctLink = "";
+
+        if (!linkToBuyTickets.contains("https")) {
+            correctLink = "https://";
+        }
+
+        if (!linkToBuyTickets.contains("www")) {
+            correctLink += "www.";
+        }
+        //correctLink += linkToBuyTickets;
+        return correctLink + linkToBuyTickets;
     }
 }

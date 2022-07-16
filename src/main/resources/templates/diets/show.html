@@ -2,39 +2,22 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{navigation-bar :: navbar (~{::body}, ~{::title})}">
 <head>
     <meta charset="UTF-8">
-    <title th:text="${product.name}"></title>
+    <title></title>
 </head>
 <body>
 
 <div class="container my-2">
-    <div class="row custom-frame">
-        <div class="col-6">
-            <img th:src="@{/products/{id}/image (id=${product.id})}" style="width: 100%" alt="">
-        </div>
-        <div class="col-6">
-            <h4 th:text="${product.name}" id="product-name"></h4>
-            <hr/>
-
-            <strong>Average Price :</strong> <span th:text="${product.price} + '€'"></span>
-            <hr/>
-
-            <p th:text="${product.description}" th:align="justify"></p>
-            <hr/>
-
-            <span>
-                <strong>Category:</strong>
-                <a rel="tag" th:text="${product.type}" th:href="@{/products?type={type} (type=${product.type})} "></a>
-            </span>
-            <hr/>
-        </div>
+    <div class="col-8 custom-frame" style="margin: auto">
+        <h3 th:text="${diet.title}" id="diet_title" th:align="justify"></h3>
+        <span th:text="${diet.body}" th:align="justify"></span>
     </div>
     <br/>
-    <div class="row custom-frame">
+    <div class="col-8 custom-frame" style="margin: auto">
         <div class="d-flex justify-content-center" th:unless="${#authentication.getPrincipal() == 'anonymousUser'}">
 
-            <form class="form-group" th:action="@{/products/{id}/rating (id=${product.id})}" th:object="${newRating}"
+            <form class="form-group" th:action="@{/diets/{id}/rating (id=${diet.id})}" th:object="${newRating}"
                   method="post">
-                <h4>Rate this product</h4>
+                <h4 style="text-align: center">Rate this product</h4>
                 <div>
                     <input type="hidden" id="selected_rating" name="selected_rating" value="" required="required"
                            th:field="*{rate}">
@@ -71,12 +54,12 @@
             </form>
         </div>
         <h4 th:text="${ratings.size()} + ' Ratings'"></h4>
-        <hr/>
         <div>
             <div th:each="rating: ${ratings}">
+                <hr/>
                 <div class="float-end" th:if="${#authentication.name == rating.user.username}">
                     <a type="button"
-                       th:href="@{/products/{id}/rating/{rate_id}/delete (id=${product.id}, rate_id=${rating.id})}">
+                       th:href="@{/diets/{id}/rating/{rate_id}/delete (id=${diet.id}, rate_id=${rating.id})}">
                         <img src="/resources/icons/delete.svg" width="20" alt="deleteButton">
                     </a>
                 </div>
@@ -91,14 +74,13 @@
 
                 <em th:text="'by ' + ${rating.user.username}"></em>
                 <p th:text="${rating.description}"></p>
-                <hr/>
             </div>
         </div>
     </div>
 </div>
 
 <script>
-    document.title = document.getElementById("product-name").innerText;
+    document.title = document.getElementById("diet_title").innerText;
 </script>
 
 </body>
