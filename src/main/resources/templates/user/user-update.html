@@ -28,7 +28,7 @@
                                    placeholder="Last Name">
                         </div>
                         <div class="form-outline mb-4">
-                            <input required disabled
+                            <input required
                                    type="text"
                                    class="form-control form-control-lg"
                                    th:field="*{username}"
@@ -41,15 +41,96 @@
                                    th:field="*{email}"
                                    placeholder="E-mail">
                         </div>
+                        <div class="form-outline mb-4">
+                            <div class="form-control form-control-lg">
+                                <label>Choose your role(s)</label><br/>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="Athlete" value="ATHLETE" th:field="*{authorities}">
+                                    <label class="form-check-label" for="Athlete">Athlete</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="Coach" value="COACH" th:field="*{authorities}">
+                                    <label class="form-check-label" for="Coach">Coach</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="Organizer" value="ORGANIZER" th:field="*{authorities}">
+                                    <label class="form-check-label" for="Organizer">Organizer</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="Nutritionist" value="NUTRITIONIST" th:field="*{authorities}">
+                                    <label class="form-check-label" for="Nutritionist">Nutritionist</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-outline mb-4">
+                            <select th:field="*{experience}" class="form-control form-control-lg">
+                                <option selected disabled value="">Choose experience</option>
+                                <option value="Novice">Novice</option>
+                                <option value="Intermediate">Intermediate</option>
+                                <option value="Advanced">Advanced</option>
+                            </select>
+                        </div>
+
+                        <div class="form-outline mb-4" id="checkboxes">
+                            <div class="form-control form-control-lg">
+                                <label>Choose race type(s)</label><br/>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="option1" value="5k" th:field="*{distancePrefs}">
+                                    <label class="form-check-label" for="option1">5k</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="option2" value="10k" th:field="*{distancePrefs}">
+                                    <label class="form-check-label" for="option2">10k</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="option6" value="15k" th:field="*{distancePrefs}">
+                                    <label class="form-check-label" for="option6">15k</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="option3" value="Half Marathon" th:field="*{distancePrefs}">
+                                    <label class="form-check-label" for="option3">Half Marathon</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="option4" value="Marathon" th:field="*{distancePrefs}">
+                                    <label class="form-check-label" for="option4">Marathon</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="option5" value="Ultra Marathon" th:field="*{distancePrefs}">
+                                    <label class="form-check-label" for="option5">Ultra Marathon</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-outline mb-4" id="field-checkboxes">
+                            <div class="form-control form-control-lg">
+                                <label>Choose field type(s)</label><br/>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="Road" value="Road" th:field="*{fieldTypes}">
+                                    <label class="form-check-label" for="Road">Road</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="Trail" value="Trail" th:field="*{fieldTypes}">
+                                    <label class="form-check-label" for="Trail">Trail</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="Track" value="Track" th:field="*{fieldTypes}">
+                                    <label class="form-check-label" for="Track">Track</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="Obstacle" value="Obstacle" th:field="*{fieldTypes}">
+                                    <label class="form-check-label" for="Obstacle">Obstacle</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="Fun" value="Fun" th:field="*{fieldTypes}">
+                                    <label class="form-check-label" for="Fun">Fun</label>
+                                </div>
+                            </div>
+                        </div>
 
                         <div class="d-flex justify-content-center">
-                            <button type="submit" class="btn"
-                                    style="display: block; width: 100%; background-color: #e9692c; color: white">Update
-                                Info
-                            </button>
+                            <button type="submit" class="btn btn-submit">Update Info</button>
                         </div>
                         <p class="text-center text-muted mt-5 mb-0">Change Password
-                            <a href="change_password" class="fw-bold text-body"><u>Click here</u></a></p>
+                            <a href="/user/change_password" class="fw-bold text-body"><u>Click here</u></a></p>
                     </form>
                 </div>
             </div>

@@ -12,7 +12,7 @@
             <div class="card shadow p-3 mb-5 bg-body rounded" style="border-radius: 15px;">
                 <div class="card-body p-5">
                     <h2 class="text-uppercase text-center mb-5"> Update Race </h2>
-                    <form th:action="@{/my-diets/{id}/update (id=${diet.id})}" th:object="${diet}" method="post">
+                    <form th:action="@{/my-diets/update}" th:object="${diet}" method="post">
                         <div class="form-outline mb-4">
                             <input required
                                    type="text"
@@ -31,10 +31,7 @@
                         </div>
 
                         <div class="d-flex justify-content-center">
-                            <button type="submit" class="btn"
-                                    style="display: block; width: 100%; background-color: #e9692c; color: white">Update
-                                Race
-                            </button>
+                            <button type="submit" class="btn btn-submit" >Update Race</button>
                         </div>
 
                     </form>

@@ -7,6 +7,13 @@
 <body>
 
 <div class="container my-2">
+    <a href="/products" style="color: black; text-decoration: none">
+        <div class="col" style="margin: auto; padding-bottom: 5px">
+            <img src="/resources/icons/back2.svg" alt="Back" style="height: 20px">
+            <strong style="vertical-align: middle">Back to Products</strong>
+        </div>
+    </a>
+
     <div class="row custom-frame">
         <div class="col-6">
             <img th:src="@{/products/{id}/image (id=${product.id})}" style="width: 100%" alt="">
@@ -26,6 +33,14 @@
                 <a rel="tag" th:text="${product.type}" th:href="@{/products?type={type} (type=${product.type})} "></a>
             </span>
             <hr/>
+            <a th:if="${#authentication.principal != 'anonymousUser'}" id="add-favorite" class="btn btn-light btn-favorite">
+                <span>Add Favorite</span>
+                <img src="/resources/icons/heart.svg" alt="heart" width="21">
+            </a>
+            <a th:if="${#authentication.principal != 'anonymousUser'}" hidden id="remove-favorite" class="btn btn-light btn-favorite">
+                <span>Remove Favorite</span>
+                <img src="/resources/icons/heart-filled.svg" alt="heart-filled" width="21">
+            </a>
         </div>
     </div>
     <br/>
@@ -89,7 +104,9 @@
                     </div>
                 </div>
 
-                <em th:text="'by ' + ${rating.user.username}"></em>
+                <a style="text-decoration: none" th:href="@{/user/{username} (username=${rating.user.username})}">
+                    <small><em th:text="'by ' + ${rating.user.username}"></em></small>
+                </a>
                 <p th:text="${rating.description}"></p>
                 <hr/>
             </div>
@@ -99,6 +116,11 @@
 
 <script>
     document.title = document.getElementById("product-name").innerText;
+
+    if ([[${isFavorite}]]) {
+        document.getElementById("add-favorite").hidden = [[${isFavorite}]];
+        document.getElementById("remove-favorite").hidden = [[${!isFavorite}]];
+    }
 </script>
 
 </body>

@@ -12,51 +12,100 @@
             <div class="card shadow p-3 mb-5 bg-body rounded" style="border-radius: 15px;">
                 <div class="card-body p-5">
                     <h2 class="text-uppercase text-center mb-5"> Create Product </h2>
-                    <form th:action="@{/my-products/new}" method="post" enctype="multipart/form-data">
+                    <form th:action="@{/my-products/new}" th:object="${product}" method="post"
+                          enctype="multipart/form-data">
                         <div class="form-outline mb-4">
                             <input required
                                    type="text"
                                    class="form-control form-control-lg"
-                                   name="name"
+                                   th:field="*{name}"
                                    placeholder="Product Title">
                         </div>
                         <div class="form-outline mb-4">
-                            <input required
-                                   type="text"
-                                   class="form-control form-control-lg"
-                                   name="type"
-                                   placeholder="Product Type">
+                            <select hidden required name="category" class="form-control form-control-lg" id="category">
+                                <option selected disabled value="">Choose product category</option>
+                                <option value="Shoes">Shoes</option>
+                                <option value="Apparel">Apparel</option>
+                                <option value="Wearables">Wearables</option>
+                            </select>
                         </div>
                         <div class="form-outline mb-4">
-                            <input required
-                                   type="number"
-                                   class="form-control form-control-lg"
-                                   name="price"
-                                   placeholder="Average Price">
+                            <select required name="type" class="form-control form-control-lg" id="type"
+                                    onchange="chooseCategory()">
+                                <option hidden selected disabled value="">Choose product type</option>
+                                <optgroup label="Shoes">
+                                    <option value="Running">Running</option>
+                                    <option value="Trail">Trail</option>
+                                    <option value="Marathon">Marathon</option>
+                                    <option value="Hike">Hike</option>
+                                    <option hidden value=""></option>
+                                    <option hidden value=""></option>
+                                    <option hidden value=""></option>
+                                </optgroup>
+                                <optgroup label="Apparel">
+                                    <option value="Shorts">Shorts</option>
+                                    <option value="Windproof">Windproof</option>
+                                    <option hidden value=""></option>
+                                    <option hidden value=""></option>
+                                    <option hidden value=""></option>
+                                </optgroup>
+                                <optgroup label="Wearables">
+                                    <option value="Activity Trackers">Activity Trackers</option>
+                                    <option value="GPS Watches">GPS Watches</option>
+                                    <option hidden value=""></option>
+                                    <option hidden value=""></option>
+                                    <option hidden value=""></option>
+                                </optgroup>
+                            </select>
                         </div>
                         <div class="form-outline mb-4">
                             <input required
                                    type="file"
                                    accept="image/*"
                                    class="form-control form-control-lg"
-                                   name="image"
+                                   name="file"
                                    id="image">
-
+                        </div>
+                        <div class="field-pros-wrapper">
+                            <div class="form-outline mb-4 input-group">
+                                <input required
+                                       type="text"
+                                       class="form-control form-control-lg"
+                                       name="pros[]"
+                                       placeholder="Add an advantage for this product">
+                                <span class="add-pros-button input-group-text" style="cursor: pointer">Add More</span>
+                            </div>
+                        </div>
+                        <div class="field-cons-wrapper">
+                            <div class="form-outline mb-4 input-group">
+                                <input required
+                                       type="text"
+                                       class="form-control form-control-lg"
+                                       name="cons[]"
+                                       placeholder="Add a disadvantage for this product">
+                                <span class="add-cons-button input-group-text" style="cursor: pointer">Add More</span>
+                            </div>
+                        </div>
+                        <div class="form-outline mb-4 input-group flex-nowrap">
+                            <span class="input-group-text" id="addon-wrapping"> € </span>
+                            <input required
+                                   type="number"
+                                   class="form-control form-control-lg"
+                                   name="price"
+                                   placeholder="Average Price"
+                                   aria-describedby="addon-wrapping">
                         </div>
                         <div class="form-outline mb-4">
                         <textarea required
                                   class="form-control form-control-lg"
-                                  rows="3"
-                                  name="description"
+                                  rows="6"
+                                  th:field="*{description}"
                                   placeholder="Description"></textarea>
 
                         </div>
 
                         <div class="d-flex justify-content-center">
-                            <button type="submit" class="btn"
-                                    style="display: block; width: 100%; background-color: #e9692c; color: white">
-                                Create Product
-                            </button>
+                            <button type="submit" class="btn btn-submit">Create Product</button>
                         </div>
 
                     </form>
@@ -65,6 +114,60 @@
         </div>
     </div>
 </div>
+
+<script>
+    function chooseCategory() {
+        let category = document.querySelector('#category');
+        let label = document.querySelector('select[name="type"] option:checked').parentElement.label;
+
+        category.value = label;
+    }
+
+    $(document).ready(function () {
+        let addProsButton = $('.add-pros-button');
+        let addConsButton = $('.add-cons-button');
+        let prosWrapper = $('.field-pros-wrapper');
+        let consWrapper = $('.field-cons-wrapper');
+        let fieldProsHTML =
+            '<div class="form-outline mb-4 input-group">\n' +
+            '    <input required\n' +
+            '           type="text"\n' +
+            '           class="form-control form-control-lg"\n' +
+            '           name="pros[]" \n' +
+            '           placeholder="Add another advantage">\n' +
+            '    <span class="remove-pros-button input-group-text" style="cursor: pointer">Remove</span>\n' +
+            '</div>\n';
+
+        let fieldConsHTML =
+            '<div class="form-outline mb-4 input-group">\n' +
+            '    <input required\n' +
+            '           type="text"\n' +
+            '           class="form-control form-control-lg"\n' +
+            '           name="cons[]""\n' +
+            '           placeholder="Add another disadvantage">\n' +
+            '    <span class="remove-cons-button input-group-text" style="cursor: pointer">Remove</span>\n' +
+            '</div>\n';
+
+        $(addProsButton).click(function () {
+            $(prosWrapper).append(fieldProsHTML);
+        });
+
+        $(addConsButton).click(function () {
+            $(consWrapper).append(fieldConsHTML);
+        });
+
+        $(prosWrapper).on('click', '.remove-pros-button', function (e) {
+            e.preventDefault();
+            $(this).parent('div').remove();
+        });
+
+        $(consWrapper).on('click', '.remove-cons-button', function (e) {
+            e.preventDefault();
+            $(this).parent('div').remove();
+        });
+    });
+
+</script>
 
 </body>
 </html>

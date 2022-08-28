@@ -12,54 +12,94 @@
             <div class="card shadow p-3 mb-5 bg-body rounded" style="border-radius: 15px;">
                 <div class="card-body p-5">
                     <h2 class="text-uppercase text-center mb-5"> Update Product </h2>
-                    <form th:action="@{/my-products/{id}/update (id=${product.id})}" method="post" enctype="multipart/form-data">
+                    <form th:action="@{/my-products/update}" th:object="${product}" method="post" enctype="multipart/form-data">
                         <div class="form-outline mb-4">
                             <input required
                                    type="text"
                                    class="form-control form-control-lg"
                                    name="name"
-                                   th:field="${product.name}"
+                                   th:field="*{name}"
                                    placeholder="Product Title">
                         </div>
                         <div class="form-outline mb-4">
-                            <input required
-                                   type="text"
-                                   class="form-control form-control-lg"
-                                   name="type"
-                                   th:field="${product.type}"
-                                   placeholder="Product Type">
+                            <select hidden required th:field="*{category}" class="form-control form-control-lg" id="category">
+                                <option selected disabled value="">Choose product category</option>
+                                <option value="Shoes">Shoes</option>
+                                <option value="Apparel">Apparel</option>
+                                <option value="Wearables">Wearables</option>
+                            </select>
                         </div>
                         <div class="form-outline mb-4">
-                            <input required
-                                   type="number"
-                                   class="form-control form-control-lg"
-                                   name="price"
-                                   th:field="${product.price}"
-                                   placeholder="Average Price">
+                            <select required th:field="*{type}" class="form-control form-control-lg" id="type"
+                                    onchange="chooseCategory()">
+                                <option hidden selected disabled value="">Choose product type</option>
+                                <optgroup label="Shoes">
+                                    <option value="Running">Running</option>
+                                    <option value="Trail">Trail</option>
+                                    <option value="Marathon">Marathon</option>
+                                    <option value="Hike">Hike</option>
+                                    <option hidden value=""></option>
+                                    <option hidden value=""></option>
+                                    <option hidden value=""></option>
+                                </optgroup>
+                                <optgroup label="Apparel">
+                                    <option value="Shorts">Shorts</option>
+                                    <option value="Windproof">Windproof</option>
+                                    <option hidden value=""></option>
+                                    <option hidden value=""></option>
+                                    <option hidden value=""></option>
+                                </optgroup>
+                                <optgroup label="Wearables">
+                                    <option value="Activity Trackers">Activity Trackers</option>
+                                    <option value="GPS Watches">GPS Watches</option>
+                                    <option hidden value=""></option>
+                                    <option hidden value=""></option>
+                                    <option hidden value=""></option>
+                                </optgroup>
+                            </select>
                         </div>
                         <div class="form-outline mb-4">
                             <input
                                    type="file"
                                    accept="image/*"
                                    class="form-control form-control-lg"
-                                   th:field="${product.image}"
-                                   name="image">
+                                   name="file"
+                                   id="image">
+                        </div>
+
+                        <div class="form-outline mb-4">
+                            <select th:field="*{pros}" class="select2 form-control" multiple>
+                                <option selected hidden disabled value=""></option>
+                                <option th:each="pro: *{pros}" th:text="${pro}" th:value="${pro}"></option>
+                            </select>
+                        </div>
+                        <div class="form-outline mb-4">
+                            <select th:field="*{cons}" class="select2 form-control" multiple>
+                                <option selected hidden disabled value=""></option>
+                                <option th:each="con: *{cons}" th:text="${con}" th:value="${con}"></option>
+                            </select>
+                        </div>
+
+                        <div class="form-outline mb-4">
+                            <input required
+                                   type="number"
+                                   class="form-control form-control-lg"
+                                   name="price"
+                                   th:field="*{price}"
+                                   placeholder="Average Price">
                         </div>
                         <div class="form-outline mb-4">
                         <textarea required
                                   class="form-control form-control-lg"
                                   rows="3"
                                   name="description"
-                                  th:field="${product.description}"
+                                  th:field="*{description}"
                                   placeholder="Description"></textarea>
 
                         </div>
 
                         <div class="d-flex justify-content-center">
-                            <button type="submit" class="btn"
-                                    style="display: block; width: 100%; background-color: #e9692c; color: white">
-                                Update Product
-                            </button>
+                            <button type="submit" class="btn btn-submit">Update Product</button>
                         </div>
 
                     </form>
@@ -68,6 +108,10 @@
         </div>
     </div>
 </div>
-
+<script>
+    $(".select2").select2({
+        tags: true
+    });
+</script>
 </body>
 </html>

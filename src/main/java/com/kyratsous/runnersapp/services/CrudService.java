@@ -10,13 +10,11 @@ public interface CrudService<T, ID> {
 
     T findById(ID id);
 
-    void save(T object);
-
-    void delete(T object);
+    T save(T object);
 
     void deleteById(ID id);
 
     void update(T object);
 
-    Set<T> findAllByUserId(User user);
+    Set<T> findAllByUser(User user);
 }

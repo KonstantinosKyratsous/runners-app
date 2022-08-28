@@ -21,19 +21,78 @@
                                    placeholder="Title">
                         </div>
                         <div class="form-outline mb-4">
+                            <select required name="experience" class="form-control form-control-lg">
+                                <option selected disabled value="">Choose experience</option>
+                                <option value="Novice">Novice</option>
+                                <option value="Intermediate">Intermediate</option>
+                                <option value="Advanced">Advanced</option>
+                            </select>
+                        </div>
+                        <i id="error-message" style="color: red; font-size: 12px"></i>
+                        <div class="form-outline mb-4" id="distance-checkboxes">
+                            <div class="form-control form-control-lg">
+                                <label>Choose race distance(s)</label><br/>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="dist-5k" value="5k" th:field="*{distanceOptions}">
+                                    <label class="form-check-label" for="dist-5k">5k</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="dist-10k" value="10k" th:field="*{distanceOptions}">
+                                    <label class="form-check-label" for="dist-10k">10k</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="dist-15k" value="15k" th:field="*{distanceOptions}">
+                                    <label class="form-check-label" for="dist-15k">15k</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="dist-half" value="Half Marathon" th:field="*{distanceOptions}">
+                                    <label class="form-check-label" for="dist-half">Half Marathon</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="dist-marathon" value="Marathon" th:field="*{distanceOptions}">
+                                    <label class="form-check-label" for="dist-marathon">Marathon</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="dist-ultra" value="Ultra Marathon" th:field="*{distanceOptions}">
+                                    <label class="form-check-label" for="dist-ultra">Ultra Marathon</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-outline mb-4" id="field-checkboxes">
+                            <div class="form-control form-control-lg">
+                                <label>Choose race field(s)</label><br/>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="field-road" value="Road" th:field="*{fieldOptions}">
+                                    <label class="form-check-label" for="field-road">Road</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="field-track" value="Track" th:field="*{fieldOptions}">
+                                    <label class="form-check-label" for="field-track">Track</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="field-trail" value="Trail" th:field="*{fieldOptions}">
+                                    <label class="form-check-label" for="field-trail">Trail</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="field-obstacle" value="Obstacle" th:field="*{fieldOptions}">
+                                    <label class="form-check-label" for="field-obstacle">Obstacle</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="field-fun" value="Fun" th:field="*{fieldOptions}">
+                                    <label class="form-check-label" for="field-fun">Fun</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-outline mb-4">
                         <textarea required
                                   class="form-control form-control-lg"
                                   rows="10"
                                   th:field="*{body}"
                                   placeholder="Main Post"></textarea>
-
                         </div>
 
                         <div class="d-flex justify-content-center">
-                            <button type="submit" class="btn"
-                                    style="display: block; width: 100%; background-color: #e9692c; color: white">Create
-                                Exercise
-                            </button>
+                            <button type="submit" class="btn btn-submit">Create Exercise</button>
                         </div>
 
                     </form>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{navigation-bar :: navbar (~{::body}, ~{::title})}">
+<head>
+    <meta charset="UTF-8">
+    <title>Favorite Products</title>
+</head>
+<body>
+
+<div class="container my-2">
+    <div class="row col-8" style="margin: auto">
+        <h4>Favorite Products</h4><br/>
+        <div class="result" style="width: auto" th:each="product: ${products}">
+            <div class="card" style="padding: 10px; height: min-content; width: 268px; cursor: pointer; white-space: nowrap; overflow: hidden;"
+                 th:onclick="'window.location.href = \'' + @{/products/{id} (id=${product.id})} + '\''">
+                <img th:src="@{/products/{id}/image (id=${product.id})}" width="246" height="246"
+                     style="background-color: #ccc">
+                <strong th:text="${product.name}"></strong>
+                <span th:text="${product.price} + '€'"></span>
+                <a th:href="@{/products/{id}/remove-favorite (id=${product.id})}" title="Remove from favorites">
+                    <img src="/resources/icons/heart-filled.svg" style="width: 21px; float: right" alt="heart-filled">
+                </a>
+            </div>
+            <br/>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

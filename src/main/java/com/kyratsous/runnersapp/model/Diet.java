@@ -1,20 +1,27 @@
 package com.kyratsous.runnersapp.model;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @Entity
 @Table(name = "diets")
 public class Diet extends BaseEntity{
-
+    @NotNull
     private String title;
+    @NotNull
     private String body;
+    @NotNull
     private Date date;
-
+    @NotNull
     @ManyToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "nutritionist_id")
     private User nutritionist;
 

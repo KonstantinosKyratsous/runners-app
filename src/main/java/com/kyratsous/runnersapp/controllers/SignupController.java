@@ -1,10 +1,7 @@
 package com.kyratsous.runnersapp.controllers;
 
-import com.kyratsous.runnersapp.model.Authority;
 import com.kyratsous.runnersapp.model.User;
-import com.kyratsous.runnersapp.services.AuthorityService;
 import com.kyratsous.runnersapp.services.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,37 +13,24 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class SignupController {
 
     private final UserService userService;
-    private final AuthorityService authorityService;
+    private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    public SignupController(UserService userService, AuthorityService authorityService) {
+    public SignupController(UserService userService, PasswordEncoder passwordEncoder) {
         this.userService = userService;
-        this.authorityService = authorityService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @RequestMapping({"/signup", "/signup.html"})
     public String signup(Model model) {
-        User user = new User();
-        model.addAttribute("user", user);
-
-        Authority authority = new Authority();
-        model.addAttribute("authority", authority);
+        model.addAttribute("user", new User());
 
         return "signup";
     }
 
     @PostMapping("/process-signup")
-    public String processSignup(@ModelAttribute("user") User user, @ModelAttribute("authority") Authority authority) {
-
-        String encodedPassword = passwordEncoder.encode(user.getPassword());
-        user.setPassword(encodedPassword);
-
+    public String processSignup(@ModelAttribute("user") User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userService.save(user);
-
-        authority.setUser(user);
-        authorityService.save(authority);
 
         return "redirect:/login";
     }

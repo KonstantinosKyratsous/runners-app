@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{navigation-bar :: navbar (~{::body}, ~{::title})}">
+<head>
+    <meta charset="UTF-8">
+    <title>Profile</title>
+</head>
+<body>
+
+<div class="container my-2">
+    <div class="row col-10" style="margin: auto">
+        <div class="col-4"> <!-- User Info -->
+            <div class="card">
+                <div class="card-body">
+                    <img class="mx-auto d-block" src="/resources/icons/user.svg" alt="User" height="80">
+                    <br/>
+                    <div class="row">
+                        <div class="col-6">
+                            <h6 class="mb-0">Full Name</h6>
+                        </div>
+                        <div class="col-6 text-secondary">
+                            <a th:text="${user.firstName + ' ' + user.lastName}"></a>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-6">
+                            <h6 class="mb-0">Username</h6>
+                        </div>
+                        <div class="col-6 text-secondary">
+                            <a th:text="${user.username}"></a>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-6">
+                            <h6 class="mb-0">E-mail</h6>
+                        </div>
+                        <div class="col-6 text-secondary">
+                            <a th:text="${user.email}"></a>
+                        </div>
+                    </div>
+                    <hr/>
+                    <div class="d-flex">
+                        <a href="/user/update" class="btn" style="background-color: #e9692c; color: white">Edit</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-8">
+            <div class="card">
+                <div class="card-body row">
+                    <h3>Dashboard</h3><hr/><br/>
+                    <div class="col-6" style="border-right: 1px solid black; border-bottom: 1px solid black; text-align: right">
+                        <br/><h4>Races</h4>
+                        <a th:href="@{/my-races/new}">Create Race</a><br/>
+                        <a th:href="@{/my-races}">Mange your races</a><br/>
+                        <a th:href="@{/races/favorites}">Favorite races</a><br/>
+                        <a th:href="@{/races}">See all races</a><br/><br/>
+                    </div>
+                    <div class="col-6" style="border-left: 1px solid black; border-bottom: 1px solid black;">
+                        <br/><h4>Exercises</h4>
+                        <a th:href="@{/my-exercises/new}">Create Exercise</a><br/>
+                        <a th:href="@{/my-exercises}">Mange your exercises</a><br/>
+                        <a th:href="@{/exercises/favorites}">Favorite exercises</a><br/>
+                        <a th:href="@{/exercises}">See all exercises</a><br/><br/>
+                    </div>
+                    <div class="col-6" style="border-right: 1px solid black; border-top: 1px solid black; text-align: right">
+                        <br/><h4>Diets</h4>
+                        <a th:href="@{/my-diets/new}">Create Diet</a><br/>
+                        <a th:href="@{/my-diets}">Mange your diets</a><br/>
+                        <a th:href="@{/diets/favorites}">Favorite diets</a><br/>
+                        <a th:href="@{/diets}">See all diets</a><br/><br/>
+                    </div>
+                    <div class="col-6" style="border-left: 1px solid black; border-top: 1px solid black;">
+                        <br/><h4>Products</h4>
+                        <a th:href="@{/my-products/new}">Create Product</a><br/>
+                        <a th:href="@{/my-products}">Mange your products</a><br/>
+                        <a th:href="@{/products/favorites}">Favorite products</a><br/>
+                        <a th:href="@{/products}">See all products</a><br/><br/>
+                    </div>
+                </div>
+<!--                <div class="card-body">-->
+<!--                    &lt;!&ndash; RACES &ndash;&gt;-->
+<!--                    <div th:if="${!races.isEmpty() && (#authentication.getAuthorities()[0].getAuthority() == 'ORGANIZER' || #authentication.getAuthorities()[0].getAuthority() == 'ADMIN')}">-->
+<!--                        <h4> My Races </h4><br/>-->
+<!--                        <hr/>-->
+<!--                        <div th:each="race: ${races}">-->
+<!--                            <div class="row">-->
+<!--                                <div class="col-9">-->
+<!--                                    <h6 class="mb-0" th:text="${race.title}"></h6>-->
+<!--                                </div>-->
+<!--                                <div class="col-3 text-secondary">-->
+<!--                                    <a th:href="@{/races/{id}/ (id=${race.id})}">View full post</a>-->
+<!--                                    <a th:href="@{/races/{id}/update (id=${race.id})}">Update</a>-->
+<!--                                    <a th:href="@{/races/{id}/delete (id=${race.id})}">Delete</a>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                            <hr>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    &lt;!&ndash; EXERCISES &ndash;&gt;-->
+<!--                    <div th:if="${!exercises.isEmpty() && (#authentication.getAuthorities()[0].getAuthority() == 'COACH' || #authentication.getAuthorities()[0].getAuthority() == 'ADMIN')}">-->
+<!--                        <h4> My Exercises </h4><br/>-->
+<!--                        <hr/>-->
+<!--                        <div th:each="exercise: ${exercises}">-->
+<!--                            <div class="row">-->
+<!--                                <div class="col-6">-->
+<!--                                    <h6 class="mb-0" th:text="${exercise.title}">Title</h6>-->
+<!--                                </div>-->
+<!--                                <div class="col-6 text-secondary">-->
+<!--                                    <a th:href="@{/exercises/{id}/ (id=${exercise.id})}">View full post</a>-->
+<!--                                    <a th:href="@{/exercises/{id}/update (id=${exercise.id})}">Update</a>-->
+<!--                                    <a th:href="@{/exercises/{id}/delete (id=${exercise.id})}">Delete</a>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                            <hr/>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    &lt;!&ndash; DIETS &ndash;&gt;-->
+<!--                    <div th:if="${!diets.isEmpty() && (#authentication.getAuthorities()[0].getAuthority() == 'NUTRITIONIST' || #authentication.getAuthorities()[0].getAuthority() == 'ADMIN')}">-->
+<!--                        <h4> My Diets </h4><br/>-->
+<!--                        <div th:each="diet: ${diets}">-->
+<!--                            <div class="row">-->
+<!--                                <div class="col-6">-->
+<!--                                    <a class="mb-0" th:href="@{/diets/{id}/ (id=${diet.id})}"-->
+<!--                                       th:text="${diet.title}"></a>-->
+<!--                                </div>-->
+<!--                                <div class="col-6 text-secondary">-->
+<!--                                    <a th:href="@{/diets/{id}/update (id=${diet.id})}">Update</a>-->
+<!--                                    <a th:href="@{/diets/{id}/delete (id=${diet.id})}">Delete</a>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                            <hr>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    &lt;!&ndash; PRODUCTS &ndash;&gt;-->
+<!--                    <div th:if="${!products.isEmpty() && (#authentication.getAuthorities()[0].getAuthority() == 'COACH' || #authentication.getAuthorities()[0].getAuthority() == 'ADMIN')}">-->
+<!--                        <h4> My Products </h4><br/>-->
+<!--                        <div th:each="product: ${products}">-->
+<!--                            <div class="row">-->
+<!--                                <div class="col-6">-->
+<!--                                    <a class="mb-0" th:href="@{/products/{id} (id=${product.id})}"></a>-->
+<!--                                </div>-->
+<!--                                <div class="col-6 text-secondary">-->
+<!--                                    <a th:href="@{/products/{id}/update (id=${product.id})}">Update</a>-->
+<!--                                    <a th:href="@{/products/{id}/delete (id=${product.id})}">Delete</a>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                            <hr/>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,6 +1,5 @@
 package com.kyratsous.runnersapp.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -17,8 +16,11 @@ import javax.sql.DataSource;
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Autowired
-    private DataSource dataSource;
+    private final DataSource dataSource;
+
+    public SecurityConfig(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -36,25 +38,39 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception{
-
         http
                 .authorizeRequests()
                 .antMatchers("/", "/login", "/signup").permitAll() //.anonymous()
                 .antMatchers("/races", "/exercises", "/diets", "/products").permitAll()
-                .antMatchers("/user", "/user/**").authenticated()
+                .antMatchers("/user", "/profile", "/user/**", "/favorites").authenticated()
 
                 .antMatchers("/my-races/**").hasAnyAuthority("ADMIN", "ORGANIZER")
                 .antMatchers("/my-diets/**").hasAnyAuthority("ADMIN", "NUTRITIONIST")
                 .antMatchers("/my-exercises/**").hasAnyAuthority("ADMIN", "COACH")
                 .antMatchers("/my-products/**").hasAnyAuthority("ADMIN", "COACH")
+
+                .antMatchers("/races/**/add-favorite", "/races/**/remove-favorite").authenticated()
+                .antMatchers("/products/**/add-favorite", "/products/**/remove-favorite").authenticated()
+                .antMatchers("/diets/**/add-favorite", "/diets/**/remove-favorite").authenticated()
+                .antMatchers("/exercises/**/add-favorite", "/exercises/**/remove-favorite").authenticated()
+
+                // Login Configurations
                 .and()
                 .formLogin().loginPage("/login").loginProcessingUrl("/process-login")
-                .failureUrl("/login-error")
+                .successForwardUrl("/create-cookies")
+                .failureUrl("/login?error=true")
+
                 .and()
                 .httpBasic()
+
+                // Logout Configurations
                 .and()
                 .logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                .logoutSuccessUrl("/login").deleteCookies("JSESSIONID")
-                .invalidateHttpSession(true);
+                .logoutSuccessUrl("/login?logout=true").deleteCookies("JSESSIONID")
+                .invalidateHttpSession(true)
+
+                .and()
+                .sessionManagement()
+                .invalidSessionUrl("/login?invalid-session=true");
     }
 }

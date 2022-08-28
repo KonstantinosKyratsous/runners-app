@@ -12,7 +12,7 @@
             <div class="card shadow p-3 mb-5 bg-body rounded" style="border-radius: 15px;">
                 <div class="card-body p-5">
                     <h2 class="text-uppercase text-center mb-5"> Create Race </h2>
-                    <form th:action="@{/my-races/new}" th:object="${race}" method="post">
+                    <form th:action="@{/my-races/new}" th:object="${race}" method="post" enctype="multipart/form-data" onsubmit="event.preventDefault(); validateRaceForm()">
                         <div class="form-outline mb-4">
                             <input required
                                    type="text"
@@ -20,13 +20,68 @@
                                    th:field="*{title}"
                                    placeholder="Race Title">
                         </div>
-                        <div class="form-outline mb-4">
-                            <select class="form-control form-control-lg" th:field="*{location}">
-                                <option value="" selected hidden>Choose the city</option>
-                                <div th:each="city: ${cities}">
-                                    <option th:value="${city}" th:text="${city}"></option>
+                        <i id="error-message" style="color: red; font-size: 12px"></i>
+                        <div class="form-outline mb-4" id="checkboxes">
+                            <div class="form-control form-control-lg">
+                                <label>Choose race type(s)</label><br/>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="option1" value="5k" th:field="*{distanceOptions}">
+                                    <label class="form-check-label" for="option1">5k</label>
                                 </div>
-                            </select>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="option2" value="10k" th:field="*{distanceOptions}">
+                                    <label class="form-check-label" for="option2">10k</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="option6" value="15k" th:field="*{distanceOptions}">
+                                    <label class="form-check-label" for="option6">15k</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="option3" value="Half Marathon" th:field="*{distanceOptions}">
+                                    <label class="form-check-label" for="option3">Half Marathon</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="option4" value="Marathon" th:field="*{distanceOptions}">
+                                    <label class="form-check-label" for="option4">Marathon</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="option5" value="Ultra Marathon" th:field="*{distanceOptions}">
+                                    <label class="form-check-label" for="option5">Ultra Marathon</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="option7" value="Obstacle" th:field="*{distanceOptions}">
+                                    <label class="form-check-label" for="option7">Obstacle</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-outline mb-4" id="field-checkboxes">
+                            <div class="form-control form-control-lg">
+                                <label>Choose field type(s)</label><br/>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="Road" value="Road" th:field="*{fieldOptions}">
+                                    <label class="form-check-label" for="Road">Road</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="Trail" value="Trail" th:field="*{fieldOptions}">
+                                    <label class="form-check-label" for="Trail">Trail</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="Track" value="Track" th:field="*{fieldOptions}">
+                                    <label class="form-check-label" for="Track">Track</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="Fun" value="Fun" th:field="*{fieldOptions}">
+                                    <label class="form-check-label" for="Fun">Fun</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-outline mb-4">
+                            <!--<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>-->
+                            <input id="pac-input" class="form-control form-control-lg" type="text" placeholder="Enter the race location"><br/>
+                            <div class="container" id="map-canvas" style="height:300px;"></div>
+                            <input required hidden id="lat" th:field="*{latitude}">
+                            <input required hidden id="lng" th:field="*{longitude}">
+                            <input required hidden id="location" th:field="*{location}">
                         </div>
                         <div class="form-outline mb-4">
                             <input required
@@ -45,23 +100,27 @@
                         <div class="form-outline mb-4">
                         <textarea required
                                   class="form-control form-control-lg"
-                                  rows="3"
+                                  rows="6"
                                   th:field="*{description}"
                                   placeholder="Description"></textarea>
 
                         </div>
                         <div class="form-outline mb-4">
                             <input
+                                   type="file"
+                                   accept="application/pdf"
                                    class="form-control form-control-lg"
-                                   th:field="*{linkToBuyTickets}"
-                                   placeholder="Link to buy tickets">
+                                   name="file-pdf">
+                        </div>
+                        <div class="form-outline mb-4">
+                            <input
+                                   class="form-control form-control-lg"
+                                   th:field="*{registrationLink}"
+                                   placeholder="Registration link">
                         </div>
 
                         <div class="d-flex justify-content-center">
-                            <button type="submit" class="btn"
-                                    style="display: block; width: 100%; background-color: #e9692c; color: white">Create
-                                Race
-                            </button>
+                            <button type="submit" class="btn btn-submit" id="createButton">Create Race</button>
                         </div>
 
                     </form>
@@ -70,6 +129,61 @@
         </div>
     </div>
 </div>
+
+<script>
+    function init() {
+        let map = new google.maps.Map(document.getElementById('map-canvas'), {
+            center: {
+                lat: 39.074207,
+                lng: 21.824312
+            },
+            zoom: 6
+        });
+
+        let searchBox = new google.maps.places.SearchBox(document.getElementById('pac-input'));
+        google.maps.event.addListener(searchBox, 'places_changed', function() {
+            searchBox.set('map', null);
+
+            let places = searchBox.getPlaces();
+
+            let bounds = new google.maps.LatLngBounds();
+            let i, place;
+            for (i = 0; place = places[i]; i++) {
+                (function(place) {
+                    let marker = new google.maps.Marker({
+
+                        position: place.geometry.location
+                    });
+                    marker.bindTo('map', searchBox, 'map');
+                    google.maps.event.addListener(marker, 'map_changed', function() {
+                        if (!this.getMap()) {
+                            this.unbindAll();
+                        }
+                    });
+                    bounds.extend(place.geometry.location);
+
+                    let city = place.address_components.filter(ac=>~ac.types.indexOf('locality'))[0].long_name;
+                    let country = place.address_components.filter(ac=>~ac.types.indexOf('country'))[0].long_name;
+
+                    document.getElementById('location').value = city + ", " + country;
+                    document.getElementById('lat').value = place.geometry.location.lat();
+                    document.getElementById('lng').value = place.geometry.location.lng();
+                }(place));
+
+            }
+            map.fitBounds(bounds);
+            console.log("Bounds: " + bounds);
+            searchBox.set('map', map);
+            map.setZoom(Math.min(map.getZoom(),12));
+        });
+    }
+    //google.maps.event.addDomListener(window, 'load', init);
+
+</script>
+<script
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB41DRUbKWJHPxaFjMAwdrzWzbVKartNGg&callback=init&libraries=places&v=weekly"
+        async defer
+></script>
 
 </body>
 </html>

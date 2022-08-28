@@ -24,8 +24,7 @@
             </div>
 
             <div class="card-body">
-                <h5 class="card-title" th:text="${diet.date}"></h5>
-                <p class="card-text" th:text="${diet.body}"></p>
+                <p class="card-text three-line-text" th:text="${diet.body}"></p>
                 <a th:href="@{/diets/{id} (id=${diet.id})}">See the full diet post</a>
             </div>
         </div>

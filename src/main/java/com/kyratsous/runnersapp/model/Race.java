@@ -1,37 +1,60 @@
 package com.kyratsous.runnersapp.model;
 
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
+import java.util.Set;
 
 @Entity
 @Table(name = "races")
 public class Race extends BaseEntity {
 
+    @NotNull
+    private String title;
+    @NotNull
+    private String description;
+    @ElementCollection
+    @NotNull
+    private Set<String> distanceOptions;
+    @ElementCollection
+    @NotNull
+    private Set<String> fieldOptions;
+    @NotNull
+    private double latitude;
+    @NotNull
+    private double longitude;
+    @NotNull
+    private String location;
+    @NotNull
+    private Date date;
+    @NotNull
+    private double price;
+    private String registrationLink;
+    private byte[] file;
+    @NotNull
     @ManyToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "organizer_id", referencedColumnName = "id")
     private User organizer;
-    private String title;
-    private String description;
-    private String location;
-    private Date date;
-    private double price;
-    private String linkToBuyTickets;
 
-    public Race() {
+    public Race() {}
 
-    }
-
-    public Race(User organizer, String title, String description, String location, Date date, double price, String linkToBuyTickets) {
+    public Race(User organizer, String title, String description, Set<String> distanceOptions, Set<String> fieldOptions, double latitude, double longitude, String location, Date date, double price, String registrationLink, byte[] file) {
         this.organizer = organizer;
         this.title = title;
         this.description = description;
+        this.fieldOptions = fieldOptions;
+        this.distanceOptions = distanceOptions;
+        this.latitude = latitude;
+        this.longitude = longitude;
         this.location = location;
         this.date = date;
         this.price = price;
-        this.linkToBuyTickets = linkToBuyTickets;
+        this.registrationLink = registrationLink;
+        this.file = file;
     }
 
     public User getOrganizer() {
@@ -58,6 +81,38 @@ public class Race extends BaseEntity {
         this.description = description;
     }
 
+    public Set<String> getDistanceOptions() {
+        return distanceOptions;
+    }
+
+    public void setDistanceOptions(Set<String> distanceTypes) {
+        this.distanceOptions = distanceTypes;
+    }
+
+    public Set<String> getFieldOptions() {
+        return fieldOptions;
+    }
+
+    public void setFieldOptions(Set<String> fieldTypes) {
+        this.fieldOptions = fieldTypes;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
     public String getLocation() {
         return location;
     }
@@ -82,11 +137,19 @@ public class Race extends BaseEntity {
         this.price = price;
     }
 
-    public String getLinkToBuyTickets() {
-        return linkToBuyTickets;
+    public String getRegistrationLink() {
+        return registrationLink;
     }
 
-    public void setLinkToBuyTickets(String linkToBuyTickets) {
-        this.linkToBuyTickets = linkToBuyTickets;
+    public void setRegistrationLink(String registrationLink) {
+        this.registrationLink = registrationLink;
+    }
+
+    public byte[] getFile() {
+        return file;
+    }
+
+    public void setFile(byte[] file) {
+        this.file = file;
     }
 }

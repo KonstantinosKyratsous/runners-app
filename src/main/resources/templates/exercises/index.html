@@ -7,26 +7,134 @@
 <body>
 
 <div class="container my-2">
-    <h2>Exercises</h2>
+    <div class="row my-2">
+        <div class="col-3" style="box-shadow: 2px 0 0 0 #888">
+            <h5 class="column-header">Filters</h5><br/>
+            <form class="filter-form">
+                <h6>Distance types</h6>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="type-5k" value="5k">
+                    <label class="form-check-label" for="type-5k">5k</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="type-10k" value="10k">
+                    <label class="form-check-label" for="type-10k">10k</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="type-15k" value="15k">
+                    <label class="form-check-label" for="type-15k">15k</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="type-half-marathon" value="Half Marathon">
+                    <label class="form-check-label" for="type-half-marathon">Half Marathon</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="type-marathon" value="Marathon">
+                    <label class="form-check-label" for="type-marathon">Marathon</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="type-ultra-marathon" value="Ultra Marathon">
+                    <label class="form-check-label" for="type-ultra-marathon">Ultra Marathon</label>
+                </div>
+                <hr/>
+                <h6>Field types</h6>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="field-road" value="Road">
+                    <label class="form-check-label" for="field-road">Road</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="field-trail" value="Trail">
+                    <label class="form-check-label" for="field-trail">Trail</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="field-track" value="Track">
+                    <label class="form-check-label" for="field-track">Track</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="field-fun" value="Fun">
+                    <label class="form-check-label" for="field-fun">Fun</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="field-obstacle" value="Obstacle">
+                    <label class="form-check-label" for="field-obstacle">Obstacle</label>
+                </div>
+                <hr/>
+                <h6>Athlete Experience</h6>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="exp-novice" value="Novice">
+                    <label class="form-check-label" for="exp-novice">Novice</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="exp-intermediate" value="Intermediate">
+                    <label class="form-check-label" for="exp-intermediate">Intermediate</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="exp-advanced" value="Advanced">
+                    <label class="form-check-label" for="exp-advanced">Advanced</label>
+                </div>
+                <hr/>
+                <a class="btn" id="find-races-by-filters" style="background-color: #e9692c; color: white"
+                   onclick="findExercisesByFilters()">Find</a>
+                <a class="btn btn-light" style="float: right" href="/exercises">Clear all</a>
+            </form>
+        </div>
 
-    <div class="my-2" th:each="exercise: ${exercises}">
-        <div class="card">
-            <div class="card-header">
-                <div class="row">
-                    <div class="col-sm-10">
+        <div class="col-9">
+            <h5 class="column-header">Results</h5><br/>
+            <div th:each="exercise: ${exercises}">
+                <div class="card">
+                    <div class="card-header">
                         <h4 th:text="${exercise.title}"></h4>
                     </div>
-                </div>
-            </div>
 
-            <div class="card-body">
-                <p class="card-text" th:text="${exercise.body}"></p>
-                <a th:href="@{/exercises/{id} (id=${exercise.id})}">See the full exercise post</a>
+                    <div class="card-body">
+                        <p class="card-text three-line-text" th:text="${exercise.body}"></p>
+                        <a th:href="@{/exercises/{id} (id=${exercise.id})}">
+                            <em><small>See the full exercise post</small></em>
+                        </a>
+                        <a th:if="${#authentication.principal != 'anonymousUser'}" th:id="${'add-favorite-' + exercise.id}" onclick="addFavorite(this)"
+                           title="Add to favorites">
+                            <img src="/resources/icons/heart.svg" style="width: 21px; float: right; cursor: pointer"
+                                 alt="heart">
+                        </a>
+                        <a th:if="${#authentication.principal != 'anonymousUser'}" hidden th:id="${'remove-favorite-' + exercise.id}" onclick="removeFavorite(this)"
+                           title="Remove from favorites">
+                            <img src="/resources/icons/heart-filled.svg"
+                                 style="width: 21px; float: right; cursor: pointer" alt="heart-filled">
+                        </a>
+                    </div>
+                    <div class="card-footer">
+                        <small><span class="type-tag" th:each="type : ${exercise.distanceOptions}" th:text="${type}"></span></small>
+                        <small><span class="type-tag" style="background-color: blue" th:each="experience : ${exercise.experience}" th:text="${experience}"></span></small>
+                        <small><span class="type-tag" style="background-color: green" th:each="field : ${exercise.fieldOptions}" th:text="${field}"></span></small>
+                    </div>
+                </div>
+                <br/>
             </div>
         </div>
-        <br/>
     </div>
+
 </div>
+
+<script>
+    jQuery(document).ready(function ($) {
+        fillExerciseFiltersByUrlParams();
+    });
+
+    let exercises = document.querySelectorAll('[id^="add-favorite-"]');
+    let favorites = [[${favorites}]];
+
+    [].forEach.call(exercises, function (element) {
+        let id = Number(element.id.replace("add-favorite-", ""));
+        if (favorites.includes(id)) {
+            document.getElementById("add-favorite-" + id).hidden = true;
+            document.getElementById("remove-favorite-" + id).hidden = false;
+        } else {
+            document.getElementById("add-favorite-" + id).hidden = false;
+            document.getElementById("remove-favorite-" + id).hidden = true;
+        }
+    });
+</script>
 
 </body>
 </html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{navigation-bar :: navbar (~{::body}, ~{::title})}">
+<head>
+    <meta charset="UTF-8">
+    <title>Favorite Races</title>
+</head>
+<body>
+
+<div class="container my-2">
+    <div class="col-8" style="margin: auto">
+        <h4>Favorite Races</h4>
+        <br/>
+        <div class="result" th:each="race: ${races}">
+            <div class="card">
+                <div class="card-header">
+                    <div class="row">
+                        <div class="col-11">
+                            <h4 class="card-title" th:text="${race.title}"></h4>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div class="row">
+                        <img class="col-sm-1" src="/resources/icons/location.svg" alt="Location" height="20px">
+                        <h6 class="col-3 race-location" style="left: 30px" th:text="${race.location}"></h6>
+                    </div>
+                    <div class="row">
+                        <img class="col-1" src="/resources/icons/date2.svg" alt="Date" height="20px">
+                        <h6 class="col-2" style="left: 30px"
+                            th:text="${#dates.format(race.date, 'dd/MM/yyyy')}"></h6>
+                    </div>
+
+                    <p class="card-text three-line-text" th:text="${race.description}"></p>
+                    <a th:href="@{/races/{id} (id=${race.id})}">See the full race post</a>
+
+                    <a th:href="@{/races/{id}/remove-favorite (id=${race.id})}" title="Remove from favorites">
+                        <img src="/resources/icons/heart-filled.svg" style="width: 21px; float: right" alt="heart-filled">
+                    </a>
+                </div>
+            </div>
+            <br/>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

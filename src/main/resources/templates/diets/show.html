@@ -7,9 +7,26 @@
 <body>
 
 <div class="container my-2">
+    <a href="/diets" style="color: black; text-decoration: none">
+        <div class="col-8" style="margin: auto; padding-bottom: 5px; cursor: pointer">
+            <img src="/resources/icons/back2.svg" alt="Back" style="height: 20px">
+            <strong style="vertical-align: middle">Back to Diets</strong>
+        </div>
+    </a>
+
     <div class="col-8 custom-frame" style="margin: auto">
         <h3 th:text="${diet.title}" id="diet_title" th:align="justify"></h3>
-        <span th:text="${diet.body}" th:align="justify"></span>
+        <em><small th:text="${'posted by ' + diet.nutritionist.firstName + ' ' + diet.nutritionist.lastName + ' at ' + #dates.format(diet.date, 'dd/MM/yyyy')}"></small></em>
+        <a th:if="${#authentication.principal != 'anonymousUser'}" id="add-favorite" class="btn btn-light btn-favorite" style="float: right">
+            <span>Add Favorite</span>
+            <img src="/resources/icons/heart.svg" alt="heart" width="21">
+        </a>
+        <a th:if="${#authentication.principal != 'anonymousUser'}" hidden id="remove-favorite" class="btn btn-light btn-favorite" style="float: right">
+            <span>Remove Favorite</span>
+            <img src="/resources/icons/heart-filled.svg" alt="heart-filled" width="21">
+        </a>
+        <br/><br/>
+        <p th:text="${diet.body}" th:align="justify" style="white-space: pre-wrap"></p>
     </div>
     <br/>
     <div class="col-8 custom-frame" style="margin: auto">
@@ -72,7 +89,9 @@
                     </div>
                 </div>
 
-                <em th:text="'by ' + ${rating.user.username}"></em>
+                <a style="text-decoration: none" th:href="@{/user/{username} (username=${rating.user.username})}">
+                    <small><em th:text="'by ' + ${rating.user.username}"></em></small>
+                </a>
                 <p th:text="${rating.description}"></p>
             </div>
         </div>
@@ -81,6 +100,11 @@
 
 <script>
     document.title = document.getElementById("diet_title").innerText;
+
+    if ([[${isFavorite}]]) {
+        document.getElementById("add-favorite").hidden = [[${isFavorite}]];
+        document.getElementById("remove-favorite").hidden = [[${!isFavorite}]];
+    }
 </script>
 
 </body>

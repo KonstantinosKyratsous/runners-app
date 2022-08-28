@@ -1,10 +1,15 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{navigation-bar :: navbar (~{::body}, ~{::title})}">
 <head>
     <meta charset="UTF-8">
     <title>Unknown Error</title>
 </head>
 <body>
-  <h2>Unknown Error</h2>
+<div class="container my-2">
+    <h2>Sorry, an unknown error has occurred.</h2>
+
+    Click <a href="/">here</a>
+    to go back to the Homepage.
+</div>
 </body>
 </html>

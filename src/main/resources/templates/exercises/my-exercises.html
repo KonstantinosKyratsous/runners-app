@@ -14,20 +14,19 @@
             <div class="card-header">
                 <div class="row">
                     <div class="col-sm-10">
-                        <h4>This</h4>
+                        <h4 th:text="${exercise.title}"></h4>
                     </div>
                     <div class="col-sm" style="align-content: end">
-                        <a th:href="@{/exercises/{id}/update (id=${exercise.id})}">Update</a>
+                        <a th:href="@{/my-exercises/{id}/update (id=${exercise.id})}">Update</a>
                     </div>
                     <div class="col-sm" style="align-content: end">
-                        <a th:href="@{/exercises/{id}/delete (id=${exercise.id})}">Delete</a>
+                        <a th:href="@{/my-exercises/{id}/delete (id=${exercise.id})}">Delete</a>
                     </div>
                 </div>
             </div>
 
             <div class="card-body">
-                <h5 class="card-title" th:text="${exercise.title}"></h5>
-                <p class="card-text" th:text="${exercise.body}"></p>
+                <p class="card-text three-line-text" th:text="${exercise.body}"></p>
                 <a th:href="@{/exercises/{id} (id=${exercise.id})}">See the full exercise post</a>
             </div>
         </div>
