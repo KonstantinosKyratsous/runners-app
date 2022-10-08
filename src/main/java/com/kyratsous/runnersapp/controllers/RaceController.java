@@ -14,13 +14,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.*;
-import java.net.URISyntaxException;
-import java.net.URL;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -40,8 +37,7 @@ public class RaceController {
 
     @RequestMapping("/races")
     public String getAllRaces(Model model, @RequestParam(required=false) Map<String,String> filters,
-                              @RequestParam(value = "pref", defaultValue = "false") boolean pref,
-                              @CookieValue(value = "VIEW-AS", defaultValue = "GUEST") String type) {
+                              @RequestParam(value = "pref", defaultValue = "false") boolean pref) {
         User currentUser = userService.getCurrentUser();
 
         if (currentUser != null && pref) {
@@ -62,10 +58,9 @@ public class RaceController {
     }
 
     @RequestMapping("/my-races/new")
-    public String createRaceForm(Model model) throws IOException, URISyntaxException {
+    public String createRaceForm(Model model) {
         Race race = new Race();
         model.addAttribute("race", race);
-        model.addAttribute("cities", getCities());
 
         return "races/new";
     }
@@ -119,12 +114,14 @@ public class RaceController {
     @RequestMapping("/races/{id}")
     public String showRace(@PathVariable Long id, Model model) {
         model.addAttribute("race", raceService.findById(id));
+        model.addAttribute("ratings", raceRatingService.findAllByRaceId(id));
+        model.addAttribute("newRating", new RaceRating());
         model.addAttribute("isFavorite", raceFavoriteService.findAllObjectIdsByUser(userService.getCurrentUser()).contains(id));
         return "races/show";
     }
 
     @GetMapping("/races/{id}/documentation")
-    public void showProductImage(@PathVariable Long id, HttpServletResponse response) throws IOException {
+    public void showRaceImage(@PathVariable Long id, HttpServletResponse response) throws IOException {
         response.setContentType("application/pdf");
 
         Race race = raceService.findById(id);
@@ -177,26 +174,8 @@ public class RaceController {
         return "ok";
     }
 
-    private List<String> getCities() throws IOException, URISyntaxException {
-        List<String> cities = new ArrayList<>();
-
-        ClassLoader classLoader = getClass().getClassLoader();
-        URL resource = classLoader.getResource("static/resources/text/cities.txt");
-
-        assert resource != null;
-        File file = new File(resource.toURI());
-
-        BufferedReader br = new BufferedReader(new FileReader(file));
-
-        String city;
-        while ((city = br.readLine()) != null)
-            cities.add(city);
-
-        return cities;
-    }
-
     private String correctLinkToBuyTickets(String linkToBuyTickets) {
-        if (linkToBuyTickets.isEmpty())
+        if (linkToBuyTickets == null || linkToBuyTickets.isEmpty())
             return linkToBuyTickets;
 
         String correctLink = "";

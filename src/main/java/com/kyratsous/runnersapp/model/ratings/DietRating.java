@@ -17,7 +17,7 @@ public class DietRating extends Rating {
     @NotNull
     @ManyToOne
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "diet_id")
+    @JoinColumn(name = "diet_id", nullable = false)
     private Diet diet;
 
     public DietRating() {}

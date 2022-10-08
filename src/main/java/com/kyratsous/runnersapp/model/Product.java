@@ -4,7 +4,6 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.Set;
 
@@ -12,36 +11,51 @@ import java.util.Set;
 @Table(name = "products")
 public class Product extends BaseEntity {
 
-    @NotNull
+    @Column(nullable = false)
     private String name;
-    @NotNull
+
+    @Column(nullable = false)
     private String category;
-    @NotNull
+
+    @Column(nullable = false)
     private String type;
-    @NotNull
+
+    @Column(nullable = false)
+    private double rate;
+
+    @Column(nullable = false)
     private byte[] image;
+
     private double price;
-    @NotNull
+
+    @Column(nullable = false)
+    @Lob
     private String description;
+
     @ElementCollection
+    @JoinColumn
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<String> pros;
+
     @ElementCollection
+    @JoinColumn
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<String> cons;
 
     private Date date;
 
-    @NotNull
     @ManyToOne
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "coach_id")
+    @JoinColumn(name = "coach_id", nullable = false)
     private User coach;
 
     public Product() {}
 
-    public Product(String name, String category, String type, byte[] image, double price, String description, Set<String> pros, Set<String> cons, Date date) {
+    public Product(String name, String category, String type, double rate, byte[] image, double price, String description, Set<String> pros, Set<String> cons, Date date) {
         this.name = name;
         this.category = category;
         this.type = type;
+        this.rate = rate;
         this.image = image;
         this.price = price;
         this.description = description;
@@ -72,6 +86,14 @@ public class Product extends BaseEntity {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public double getRate() {
+        return rate;
+    }
+
+    public void setRate(double rate) {
+        this.rate = rate;
     }
 
     public byte[] getImage() {

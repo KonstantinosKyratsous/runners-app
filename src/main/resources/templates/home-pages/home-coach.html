@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{navigation-bar :: navbar (~{::body}, ~{::title})}">
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+</head>
+<body>
+
+<div class="container my-2">
+    <div class="col-8" style="margin: auto">
+        <h5>Actions</h5>
+        <div class="row">
+            <a class="col-6" href="/my-training-plans/new" style="text-decoration: none; margin-bottom: 10px">
+                <div class="rounded d-flex align-items-center justify-content-center" style="background-color: #e9692c; color: white; height: 120px">
+                    <h3>+ Register a new training plan</h3>
+                </div>
+            </a>
+            <a class="col-6" href="/my-training-plans" style="text-decoration: none; margin-bottom: 10px">
+                <div class="rounded d-flex align-items-center justify-content-center" style="background-color: #e9692c; color: white; height: 120px">
+                    <h3>Show all of my training plans</h3>
+                </div>
+            </a>
+            <a class="col-6" href="/my-products/new" style="text-decoration: none; margin-bottom: 10px">
+                <div class="rounded d-flex align-items-center justify-content-center" style="background-color: #e9692c; color: white; height: 120px">
+                    <h3>+ Register a new product</h3>
+                </div>
+            </a>
+            <a class="col-6" href="/my-products" style="text-decoration: none; margin-bottom: 10px">
+                <div class="rounded d-flex align-items-center justify-content-center" style="background-color: #e9692c; color: white; height: 120px">
+                    <h3>Show all of my products</h3>
+                </div>
+            </a>
+        </div>
+        <hr/>
+
+        <h5>My Training Plans</h5>
+        <div th:each="plan,planStat: ${trainingPlans}" th:if="${planStat.index < 4}">
+            <div class="card">
+                <div class="card-header">
+                    <div class="row">
+                        <div class="col-sm-10">
+                            <h4 class="one-line-text" th:text="${plan.title}"></h4>
+                        </div>
+                        <div class="col-2">
+                            <a th:href="@{/my-training-plans/{id}/delete (id=${plan.id})}" style="float:right">
+                                <img src="/resources/icons/delete.svg" width="20" alt="Delete" title="Delete Training Plan">
+                            </a>
+                            <a th:href="@{/my-training-plans/{id}/update (id=${plan.id})}" style="float: right">
+                                <img src="/resources/icons/edit.svg" width="20" alt="Update" title="Update Training Plan">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <p class="card-text three-line-text" th:text="${plan.body}"></p>
+                    <a th:href="@{/training-plans/{id} (id=${plan.id})}">See the full training plan</a>
+                </div>
+            </div>
+            <br/>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

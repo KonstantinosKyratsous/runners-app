@@ -13,12 +13,14 @@
                 <div class="card-body p-5">
                     <h2 class="text-uppercase text-center mb-5"> Update Product </h2>
                     <form th:action="@{/my-products/update}" th:object="${product}" method="post" enctype="multipart/form-data">
+                        <input type="number" hidden th:field="*{id}">
                         <div class="form-outline mb-4">
                             <input required
                                    type="text"
                                    class="form-control form-control-lg"
                                    name="name"
                                    th:field="*{name}"
+                                   maxlength="255"
                                    placeholder="Product Title">
                         </div>
                         <div class="form-outline mb-4">
@@ -57,6 +59,14 @@
                                     <option hidden value=""></option>
                                 </optgroup>
                             </select>
+                        </div>
+                        <div class="form-outline mb-4">
+                            <input required
+                                   type="number"
+                                   class="form-control form-control-lg"
+                                   th:field="*{rate}"
+                                   min="0" step="0.5" max="5"
+                                   placeholder="Average rating (0-5)">
                         </div>
                         <div class="form-outline mb-4">
                             <input
@@ -110,7 +120,8 @@
 </div>
 <script>
     $(".select2").select2({
-        tags: true
+        tags: true,
+        maximumInputLength: 255
     });
 </script>
 </body>

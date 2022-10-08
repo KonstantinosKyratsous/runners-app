@@ -31,7 +31,7 @@ public class ProductFavoriteService implements FavoriteService<ProductFavorite, 
 
     @Override
     public void save(ProductFavorite favorite) {
-        if (!repository.existsRaceFavoriteByProductAndUser(favorite.getProduct(), favorite.getUser()) &&
+        if (!repository.existsProductFavoriteByProductAndUser(favorite.getProduct(), favorite.getUser()) &&
             favorite.getProduct() != null && favorite.getUser() != null)
             repository.save(favorite);
     }
@@ -39,7 +39,7 @@ public class ProductFavoriteService implements FavoriteService<ProductFavorite, 
     @Transactional
     @Override
     public void deleteByObjectId(Long product_id, User user) {
-        repository.deleteRaceFavoriteByProductAndUser(productService.findById(product_id), user);
+        repository.deleteProductFavoriteByProductAndUser(productService.findById(product_id), user);
     }
 
     @Override

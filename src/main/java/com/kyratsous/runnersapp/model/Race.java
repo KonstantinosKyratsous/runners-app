@@ -4,7 +4,6 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.Set;
 
@@ -12,32 +11,45 @@ import java.util.Set;
 @Table(name = "races")
 public class Race extends BaseEntity {
 
-    @NotNull
+    @Column(nullable = false)
     private String title;
-    @NotNull
+
+    @Column(nullable = false)
+    @Lob
     private String description;
+
     @ElementCollection
-    @NotNull
+    @JoinColumn(nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    //@Column(nullable = false)
     private Set<String> distanceOptions;
+
     @ElementCollection
-    @NotNull
+    @JoinColumn(nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    //@Column(nullable = false)
     private Set<String> fieldOptions;
-    @NotNull
+
+    @Column(nullable = false)
     private double latitude;
-    @NotNull
+
+    @Column(nullable = false)
     private double longitude;
-    @NotNull
+
+    @Column(nullable = false)
     private String location;
-    @NotNull
+
+    @Column(nullable = false)
     private Date date;
-    @NotNull
+
+    @Column(nullable = false)
     private double price;
     private String registrationLink;
     private byte[] file;
-    @NotNull
+
     @ManyToOne
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "organizer_id", referencedColumnName = "id")
+    @JoinColumn(name = "organizer_id", referencedColumnName = "id", nullable = false)
     private User organizer;
 
     public Race() {}

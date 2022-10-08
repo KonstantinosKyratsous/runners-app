@@ -41,18 +41,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                 .antMatchers("/", "/login", "/signup").permitAll() //.anonymous()
-                .antMatchers("/races", "/exercises", "/diets", "/products").permitAll()
-                .antMatchers("/user", "/profile", "/user/**", "/favorites").authenticated()
+                .antMatchers("/races", "/training-plans", "/diets", "/products").permitAll()
+                .antMatchers("/user", "/profile", "/user/**", "/favorites", "/notifications").authenticated()
 
                 .antMatchers("/my-races/**").hasAnyAuthority("ADMIN", "ORGANIZER")
                 .antMatchers("/my-diets/**").hasAnyAuthority("ADMIN", "NUTRITIONIST")
-                .antMatchers("/my-exercises/**").hasAnyAuthority("ADMIN", "COACH")
-                .antMatchers("/my-products/**").hasAnyAuthority("ADMIN", "COACH")
+                .antMatchers("/my-training-plans/**").hasAnyAuthority("ADMIN", "COACH")
+                .antMatchers("/my-products/**").hasAnyAuthority("ADMIN", "COACH", "ATHLETE")
 
                 .antMatchers("/races/**/add-favorite", "/races/**/remove-favorite").authenticated()
                 .antMatchers("/products/**/add-favorite", "/products/**/remove-favorite").authenticated()
                 .antMatchers("/diets/**/add-favorite", "/diets/**/remove-favorite").authenticated()
-                .antMatchers("/exercises/**/add-favorite", "/exercises/**/remove-favorite").authenticated()
+                .antMatchers("/training-plans/**/add-favorite", "/training-plans/**/remove-favorite").authenticated()
 
                 // Login Configurations
                 .and()

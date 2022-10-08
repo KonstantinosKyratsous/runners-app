@@ -19,6 +19,7 @@
                                    type="text"
                                    class="form-control form-control-lg"
                                    th:field="*{name}"
+                                   maxlength="255"
                                    placeholder="Product Title">
                         </div>
                         <div class="form-outline mb-4">
@@ -60,6 +61,14 @@
                         </div>
                         <div class="form-outline mb-4">
                             <input required
+                                   type="number"
+                                   class="form-control form-control-lg"
+                                   name="rate"
+                                   min="0" step="0.5" max="5"
+                                   placeholder="Average rating (0-5)">
+                        </div>
+                        <div class="form-outline mb-4">
+                            <input required
                                    type="file"
                                    accept="image/*"
                                    class="form-control form-control-lg"
@@ -72,6 +81,7 @@
                                        type="text"
                                        class="form-control form-control-lg"
                                        name="pros[]"
+                                       maxlength="255"
                                        placeholder="Add an advantage for this product">
                                 <span class="add-pros-button input-group-text" style="cursor: pointer">Add More</span>
                             </div>
@@ -82,6 +92,7 @@
                                        type="text"
                                        class="form-control form-control-lg"
                                        name="cons[]"
+                                       maxlength="255"
                                        placeholder="Add a disadvantage for this product">
                                 <span class="add-cons-button input-group-text" style="cursor: pointer">Add More</span>
                             </div>
@@ -134,6 +145,7 @@
             '           type="text"\n' +
             '           class="form-control form-control-lg"\n' +
             '           name="pros[]" \n' +
+            '           maxlength="255" \n' +
             '           placeholder="Add another advantage">\n' +
             '    <span class="remove-pros-button input-group-text" style="cursor: pointer">Remove</span>\n' +
             '</div>\n';
@@ -144,6 +156,7 @@
             '           type="text"\n' +
             '           class="form-control form-control-lg"\n' +
             '           name="cons[]""\n' +
+            '           maxlength="255" \n' +
             '           placeholder="Add another disadvantage">\n' +
             '    <span class="remove-cons-button input-group-text" style="cursor: pointer">Remove</span>\n' +
             '</div>\n';

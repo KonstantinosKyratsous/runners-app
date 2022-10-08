@@ -7,19 +7,52 @@
 <body>
 
 <div class="container my-2">
-    <div class="row col-8" style="margin: auto">
-        <h4>Favorite Products</h4><br/>
-        <div class="result" style="width: auto" th:each="product: ${products}">
-            <div class="card" style="padding: 10px; height: min-content; width: 268px; cursor: pointer; white-space: nowrap; overflow: hidden;"
-                 th:onclick="'window.location.href = \'' + @{/products/{id} (id=${product.id})} + '\''">
-                <img th:src="@{/products/{id}/image (id=${product.id})}" width="246" height="246"
-                     style="background-color: #ccc">
-                <strong th:text="${product.name}"></strong>
-                <span th:text="${product.price} + '€'"></span>
-                <a th:href="@{/products/{id}/remove-favorite (id=${product.id})}" title="Remove from favorites">
-                    <img src="/resources/icons/heart-filled.svg" style="width: 21px; float: right" alt="heart-filled">
-                </a>
+    <div class="col-8 mx-auto">
+        <div class="custom-frame" th:each="product: ${products}">
+            <div class="row">
+                <div class="col-4" style="margin: auto 0">
+                    <img th:src="@{/products/{id}/image (id=${product.id})}"
+                         style="background-color: #ccc; width: 100%" alt="product_image">
+                </div>
+                <div class="col-8" style="margin: auto 0">
+                    <div class="row d-flex align-items-center">
+                        <h4 th:text="${product.name}" style="width: fit-content"></h4>
+                        <a hidden class="add-favorite" th:if="${#authentication.principal != 'anonymousUser'}"
+                           title="Add to favorites" th:id="${'add-favorite-' + product.id}" onclick="addFavorite(this)"></a>
+
+                        <a class="remove-favorite" th:if="${#authentication.principal != 'anonymousUser'}"
+                           title="Remove from favorites" th:id="${'remove-favorite-' + product.id}" onclick="removeFavorite(this)"></a>
+                    </div>
+
+                    <div class="d-flex aligns-items-center" style="margin: 10px 0">
+                        <img th:src="${product.rate>=1}? '/resources/icons/rating.svg': (${product.rate == 0.5}? '/resources/icons/rating-half.svg': '/resources/icons/rating-empty.svg')"
+                             alt="star" style="width: 21px">
+                        <img th:src="${product.rate>=2}? '/resources/icons/rating.svg': (${product.rate == 1.5}? '/resources/icons/rating-half.svg': '/resources/icons/rating-empty.svg')"
+                             alt="star" style="width: 21px">
+                        <img th:src="${product.rate>=3}? '/resources/icons/rating.svg': (${product.rate == 2.5}? '/resources/icons/rating-half.svg': '/resources/icons/rating-empty.svg')"
+                             alt="star" style="width: 21px">
+                        <img th:src="${product.rate>=4}? '/resources/icons/rating.svg': (${product.rate == 3.5}? '/resources/icons/rating-half.svg': '/resources/icons/rating-empty.svg')"
+                             alt="star" style="width: 21px">
+                        <img th:src="${product.rate>=5}? '/resources/icons/rating.svg': (${product.rate == 4.5}? '/resources/icons/rating-half.svg': '/resources/icons/rating-empty.svg')"
+                             alt="star" style="width: 21px">
+                        <em style="margin-left: 10px"><a style="color: #333333" th:href="${'/user/' + product.coach.username + '?p=products'}" th:text="'by ' + ${product.coach.firstName + ' ' + product.coach.lastName}"></a></em>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <ul class="positive-ul">
+                                <li th:each="pro: ${product.pros}" th:text="${pro}" class="positive-li"></li>
+                            </ul>
+                        </div>
+                        <div class="col-6">
+                            <ul class="negative-ul">
+                                <li th:each="con: ${product.cons}" th:text="${con}" class="negative-li"></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
             </div>
+
+            <a th:href="@{/products/{id} (id=${product.id})}" style="float: right; margin-right: 10px"><strong>Full Review</strong></a>
             <br/>
         </div>
     </div>

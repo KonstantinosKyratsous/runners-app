@@ -22,10 +22,12 @@
                 <div class="card-body">
                     <p class="card-text three-line-text" th:text="${diet.body}"></p>
                     <a th:href="@{/diets/{id} (id=${diet.id})}">See the full diet post</a>
-                    <a th:href="@{/diets/{id}/remove-favorite (id=${diet.id})}" title="Remove from favorites">
-                        <img src="/resources/icons/heart-filled.svg" style="width: 21px; float: right"
-                             alt="heart-filled">
-                    </a>
+
+                    <a hidden class="add-favorite" th:if="${#authentication.principal != 'anonymousUser'}" style="float: right"
+                       title="Add to favorites" th:id="${'add-favorite-' + diet.id}" onclick="addFavorite(this)"></a>
+
+                    <a class="remove-favorite" th:if="${#authentication.principal != 'anonymousUser'}" style="float: right"
+                       title="Remove from favorites" th:id="${'remove-favorite-' + diet.id}" onclick="removeFavorite(this)"></a>
                 </div>
             </div>
             <br/>

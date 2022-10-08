@@ -16,7 +16,7 @@ public class RaceRating extends Rating{
     @NotNull
     @ManyToOne
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "race_id")
+    @JoinColumn(name = "race_id", nullable = false)
     private Race race;
 
     public RaceRating() {}

@@ -14,4 +14,10 @@ public interface ProductRepository extends CrudRepository<Product, Long> {
     Set<Product> findAllByCategoryIsIn(Set<String> categories);
 
     Set<Product> findAllByPriceBetween(double min, double max);
+
+    Set<Product> findAllByRateBetween(double min, double max);
+
+    Set<Product> findAllByOrderByRateAsc();
+
+    Set<Product> findAllByOrderByRateDesc();
 }

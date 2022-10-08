@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
 
 public interface ProductFavoriteRepository extends CrudRepository<ProductFavorite, Long> {
 
-    boolean existsRaceFavoriteByProductAndUser(@NotNull Product product, @NotNull User user);
+    boolean existsProductFavoriteByProductAndUser(@NotNull Product product, @NotNull User user);
 
-    void deleteRaceFavoriteByProductAndUser(@NotNull Product product, @NotNull User user);
+    void deleteProductFavoriteByProductAndUser(@NotNull Product product, @NotNull User user);
 }

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{navigation-bar :: navbar (~{::body}, ~{::title})}">
+<head>
+    <meta charset="UTF-8">
+    <title>Training Plans</title>
+</head>
+<body>
+
+<div class="container my-2">
+    <div class="row my-2">
+        <div hidden class="col-3" style="box-shadow: 2px 0 0 0 #888" id="filters">
+            <h5 class="column-header">Filters</h5><br/>
+            <form class="filter-form">
+                <h6>Distance types</h6>
+                <div class="form-check" th:each="i: ${#numbers.sequence(0, 6)}">
+                    <input class="form-check-input" type="checkbox" th:id="'type-' + #{distance.options[__${i}__]}" th:value="#{distance.options[__${i}__]}">
+                    <label class="form-check-label" th:for="'type-' + #{distance.options[__${i}__]}" th:text="#{distance.options[__${i}__]}"></label>
+                </div>
+                <hr/>
+
+                <h6>Field types</h6>
+                <div class="form-check" th:each="i: ${#numbers.sequence(0, 3)}">
+                    <input class="form-check-input" type="checkbox" th:id="'field-' + #{field.options[__${i}__]}" th:value="#{field.options[__${i}__]}">
+                    <label class="form-check-label" th:for="'field-' + #{field.options[__${i}__]}" th:text="#{field.options[__${i}__]}"></label>
+                </div>
+                <hr/>
+
+                <h6>Athlete Experience</h6>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="exp-novice" value="Novice">
+                    <label class="form-check-label" for="exp-novice">Novice</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="exp-intermediate" value="Intermediate">
+                    <label class="form-check-label" for="exp-intermediate">Intermediate</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="exp-advanced" value="Advanced">
+                    <label class="form-check-label" for="exp-advanced">Advanced</label>
+                </div>
+                <hr/>
+                <a class="btn" id="find-races-by-filters" style="background-color: #e9692c; color: white"
+                   onclick="findTrainingPlansByFilters()">Find</a>
+                <a class="btn btn-light" style="float: right" href="/training-plans">Clear all</a>
+            </form>
+        </div>
+
+        <div class="col-9 mx-auto">
+            <div class="row">
+                <h5 th:text="${trainingPlans.size()} + ' Results'" style="width: fit-content"></h5>
+                <a onclick="showHideFilters()" href="#" id="triggerFilters" style="width: fit-content">Show Filters</a>
+            </div>
+            <br/>
+            <div th:each="plan: ${trainingPlans}">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="one-line-text" th:text="${plan.title}"></h4>
+                    </div>
+
+                    <div class="card-body">
+                        <p class="card-text three-line-text" th:text="${plan.body}"></p>
+                        <a th:href="@{/training-plans/{id} (id=${plan.id})}">
+                            <em><small>See the full training plan</small></em>
+                        </a>
+                        <a class="add-favorite" th:if="${#authentication.principal != 'anonymousUser'}" title="Add to favorites" style="float: right"
+                           th:id="${'add-favorite-' + plan.id}" onclick="addFavorite(this)"></a>
+                        <a hidden class="remove-favorite" th:if="${#authentication.principal != 'anonymousUser'}" title="Remove from favorites" style="float: right"
+                           th:id="${'remove-favorite-' + plan.id}" onclick="removeFavorite(this)"></a>
+                    </div>
+                    <div class="card-footer">
+                        <small><strong>Experience: </strong></small>
+                        <small><span class="hashtag" th:each="experience : ${plan.experience}" th:text="${experience}"></span></small>
+                        <small><strong>Races: </strong></small>
+                        <small><span class="hashtag" th:each="type : ${plan.distanceOptions}" th:text="${type}"></span></small>
+
+                    </div>
+                </div>
+                <br/>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    $(document).ready(function () {
+        fillTrainingPlanFiltersByUrlParams();
+
+        let favorites = [[${favorites}]];
+        setFavorites(favorites);
+    });
+</script>
+
+</body>
+</html>

@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class SignupController {
@@ -21,14 +22,18 @@ public class SignupController {
     }
 
     @RequestMapping({"/signup", "/signup.html"})
-    public String signup(Model model) {
+    public String signup(@RequestParam(value = "error", defaultValue = "none") String signupError, Model model) {
         model.addAttribute("user", new User());
 
-        return "signup";
+        if (signupError.equals("username"))
+            model.addAttribute("errorMessage", "The username already exists");
+        return "user/signup";
     }
 
     @PostMapping("/process-signup")
     public String processSignup(@ModelAttribute("user") User user) {
+        if (userService.findByUsername(user.getUsername()) != null)
+            return "redirect:/signup?error=username";
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userService.save(user);
 

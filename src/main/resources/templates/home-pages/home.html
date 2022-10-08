@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{navigation-bar :: navbar (~{::body}, ~{::title})}">
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+</head>
+<body>
+<div class="container container-fluid">
+    <div class="row d-flex justify-content-center">
+        <div id="carouselExampleIndicators" class="carousel slide col-9" data-bs-ride="carousel">
+            <div class="carousel-indicators">
+                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="3" aria-label="Slide 4"></button>
+            </div>
+            <div class="carousel-inner" style="border-radius: 20px">
+                <div class="carousel-item active">
+                    <img src="/resources/icons/marathon.jpg" class="d-block w-100" alt="Races">
+                    <div class="carousel-caption d-none d-md-block">
+                        <h5>Check out ongoing races</h5>
+                        <a class="btn btn-secondary" href="/races">Find</a>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <img src="/resources/icons/gym.jpg" class="d-block w-100" alt="Training Plans">
+                    <div class="carousel-caption d-none d-md-block">
+                        <h5>Check out training plans</h5>
+                        <a class="btn btn-secondary" href="/training-plans">Find</a>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <img src="/resources/icons/diet.jpg" class="d-block w-100" alt="Diets">
+                    <div class="carousel-caption d-none d-md-block">
+                        <h5>Check out diet plans</h5>
+                        <a class="btn btn-secondary" href="/diets">Find</a>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <img src="/resources/icons/apparel.jpg" class="d-block w-100" alt="Products">
+                    <div class="carousel-caption d-none d-md-block">
+                        <h5>Check out recommended apparel</h5>
+                        <a class="btn btn-secondary" href="/products">Find</a>
+                    </div>
+                </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+
+        <div class="col-9">
+            <hr/>
+            <h4>Upcoming Races</h4><br/>
+            <div th:each="race, raceStat: ${races}" th:if="${raceStat.index < 4}">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title one-line-text" th:text="${race.title}"></h4>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="row">
+                            <img style="width: fit-content; height: 20px" src="/resources/icons/location.svg" alt="Location">
+                            <h6 style="width:fit-content; left: 20px" th:text="${race.location}"></h6>
+                        </div>
+                        <div class="row">
+                            <img style="width: fit-content; height: 20px" src="/resources/icons/date2.svg" alt="Date">
+                            <h6 style="width:fit-content; left: 20px" th:text="${#dates.format(race.date, 'dd/MM/yyyy')}"></h6>
+                        </div>
+
+                        <p class="card-text three-line-text" th:text="${race.description}"></p>
+                        <a th:href="@{/races/{id} (id=${race.id})}">See the full race post</a>
+
+                    </div>
+                    <div class="card-footer">
+                        <span>Available races: </span>
+                        <span th:each="distance: ${race.distanceOptions}" th:text="${distance}" class="hashtag"></span>
+                        <span>Field type: </span>
+                        <span th:each="field: ${race.fieldOptions}" th:text="${field}" class="hashtag"></span>
+                    </div>
+                </div>
+                <br/>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

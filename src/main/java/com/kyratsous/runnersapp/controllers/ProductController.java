@@ -35,14 +35,11 @@ public class ProductController {
     }
 
     @RequestMapping("/products")
-    public String getProducts(Model model, @RequestParam(required=false) Map<String,String> filters) {
+    public String getProducts(Model model, @RequestParam(required=false) Map<String, String> filters) {
         User currentUser = userService.getCurrentUser();
-        //if (currentUser != null && filters.isEmpty()) {
-        //    return "redirect:/products?" + currentUser.getPreferencesToString();
-        //}
 
         model.addAttribute("products", filters.isEmpty()? productService.findAll(): productService.findFilteredProducts(filters));
-        model.addAttribute("favorites", productFavoriteService.findAllObjectIdsByUser(userService.getCurrentUser()));
+        model.addAttribute("favorites", productFavoriteService.findAllObjectIdsByUser(currentUser));
 
         return "products/index";
     }

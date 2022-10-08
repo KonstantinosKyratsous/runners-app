@@ -1,36 +1,41 @@
 package com.kyratsous.runnersapp.model;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import java.util.Set;
 
 @Entity
 @Table(name = "users")
 public class User extends BaseEntity{
-
-    @NotNull
+    @Column(nullable = false)
     private String firstName;
-    @NotNull
+    @Column(nullable = false)
     private String lastName;
-    @NotNull
+    @Column(nullable = false)
     private String username;
-    @NotNull
+    @Column(nullable = false)
     private String email;
-    @NotEmpty
+    @Column(nullable = false)
     private String password;
 
     @ElementCollection
-    @NotNull
     @CollectionTable(name = "authorities",
-            joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id"),
-                           @JoinColumn(name = "username", referencedColumnName = "username")})
-    @Column(name = "authority")
+            joinColumns = { @JoinColumn(name = "user_id", referencedColumnName = "id"),
+                            @JoinColumn(name = "username", referencedColumnName = "username")})
+
+    @Column(name = "authority", nullable = false)
     private Set<String> authorities;
+
     @ElementCollection
+    @JoinColumn
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<String> distancePrefs;
     private String experience;
     @ElementCollection
+    @JoinColumn
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<String> fieldTypes;
     private int enabled = 1;
 

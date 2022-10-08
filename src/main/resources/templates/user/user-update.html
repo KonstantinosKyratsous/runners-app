@@ -74,54 +74,18 @@
                         <div class="form-outline mb-4" id="checkboxes">
                             <div class="form-control form-control-lg">
                                 <label>Choose race type(s)</label><br/>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="checkbox" id="option1" value="5k" th:field="*{distancePrefs}">
-                                    <label class="form-check-label" for="option1">5k</label>
-                                </div>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="checkbox" id="option2" value="10k" th:field="*{distancePrefs}">
-                                    <label class="form-check-label" for="option2">10k</label>
-                                </div>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="checkbox" id="option6" value="15k" th:field="*{distancePrefs}">
-                                    <label class="form-check-label" for="option6">15k</label>
-                                </div>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="checkbox" id="option3" value="Half Marathon" th:field="*{distancePrefs}">
-                                    <label class="form-check-label" for="option3">Half Marathon</label>
-                                </div>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="checkbox" id="option4" value="Marathon" th:field="*{distancePrefs}">
-                                    <label class="form-check-label" for="option4">Marathon</label>
-                                </div>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="checkbox" id="option5" value="Ultra Marathon" th:field="*{distancePrefs}">
-                                    <label class="form-check-label" for="option5">Ultra Marathon</label>
+                                <div class="form-check form-check-inline" th:each="i: ${#numbers.sequence(0, 6)}">
+                                    <input class="form-check-input" type="checkbox" th:id="'option' + ${i}" th:value="#{distance.options[__${i}__]}" th:field="*{distancePrefs}">
+                                    <label class="form-check-label" th:for="'option' + ${i}" th:text="#{distance.options[__${i}__]}"></label>
                                 </div>
                             </div>
                         </div>
                         <div class="form-outline mb-4" id="field-checkboxes">
                             <div class="form-control form-control-lg">
                                 <label>Choose field type(s)</label><br/>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="checkbox" id="Road" value="Road" th:field="*{fieldTypes}">
-                                    <label class="form-check-label" for="Road">Road</label>
-                                </div>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="checkbox" id="Trail" value="Trail" th:field="*{fieldTypes}">
-                                    <label class="form-check-label" for="Trail">Trail</label>
-                                </div>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="checkbox" id="Track" value="Track" th:field="*{fieldTypes}">
-                                    <label class="form-check-label" for="Track">Track</label>
-                                </div>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="checkbox" id="Obstacle" value="Obstacle" th:field="*{fieldTypes}">
-                                    <label class="form-check-label" for="Obstacle">Obstacle</label>
-                                </div>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="checkbox" id="Fun" value="Fun" th:field="*{fieldTypes}">
-                                    <label class="form-check-label" for="Fun">Fun</label>
+                                <div class="form-check form-check-inline" th:each="i: ${#numbers.sequence(0, 3)}">
+                                    <input class="form-check-input" type="checkbox" th:id="#{field.options[__${i}__]}" th:value="#{field.options[__${i}__]}" th:field="*{fieldTypes}">
+                                    <label class="form-check-label" th:for="#{field.options[__${i}__]}" th:text="#{field.options[__${i}__]}"></label>
                                 </div>
                             </div>
                         </div>

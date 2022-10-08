@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{navigation-bar :: navbar (~{::body}, ~{::title})}">
+<head>
+    <meta charset="UTF-8">
+    <title>Favorite Training Plans</title>
+</head>
+<body>
+
+<div class="container my-2">
+    <div class="row col-8" style="margin: auto">
+        <h4>Favorite Training Plans</h4><br/>
+        <div class="my-2" th:each="plan: ${trainingPlans}">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="one-line-text" th:text="${plan.title}"></h4>
+                </div>
+
+                <div class="card-body">
+                    <p class="card-text three-line-text" th:text="${plan.body}"></p>
+                    <a th:href="@{/training-plans/{id} (id=${plan.id})}"><em><small>See the full training plan</small></em></a>
+
+                    <a hidden class="add-favorite" th:if="${#authentication.principal != 'anonymousUser'}" title="Add to favorites" style="float: right"
+                       th:id="${'add-favorite-' + plan.id}" onclick="addFavorite(this)"></a>
+                    <a class="remove-favorite" th:if="${#authentication.principal != 'anonymousUser'}" title="Remove from favorites" style="float: right"
+                       th:id="${'remove-favorite-' + plan.id}" onclick="removeFavorite(this)"></a>
+                </div>
+            </div>
+            <br/>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

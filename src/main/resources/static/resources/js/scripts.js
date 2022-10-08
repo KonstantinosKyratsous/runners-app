@@ -127,7 +127,10 @@ function getUrlParameter(sParam) {
 // Add object to favorite
 function addFavorite(element) {
     let id = element.id.replace("add-favorite-", "");
-    let url = window.location.pathname + "/" + id + "/add-favorite";
+    let url = (window.location.pathname + "/" + id + "/add-favorite")
+                .replace("favorites/", "")
+                .replace("//", "/");
+
     $.get(url, function () {
         document.getElementById("add-favorite-" + id).hidden = true;
         document.getElementById("remove-favorite-" + id).hidden = false;
@@ -137,7 +140,10 @@ function addFavorite(element) {
 // Remove object from favorite
 function removeFavorite(element) {
     let id = element.id.replace("remove-favorite-", "");
-    let url = window.location.pathname + "/" + id + "/remove-favorite";
+    let url = (window.location.pathname + "/" + id + "/remove-favorite")
+                .replace("favorites/", "")
+                .replace("//", "/");
+
     $.get(url, function () {
         document.getElementById("add-favorite-" + id).hidden = false;
         document.getElementById("remove-favorite-" + id).hidden = true;
@@ -206,23 +212,70 @@ function findRacesByFilters() {
     window.location.href = finalUrl;
 }
 
-function findExercisesByFilters() {
-    let finalUrl = "/exercises?";
+function findTrainingPlansByFilters() {
+    let finalUrl = "/training-plans?";
     let distances = document.querySelectorAll("input[id^='type-']:checked");
     let fields = document.querySelectorAll("input[id^='field-']:checked");
     let experiences = document.querySelectorAll("input[id^='exp-']:checked");
 
     [].forEach.call(distances, function (element) {
-       finalUrl += finalUrl === "/exercises?"? "distance=" + element.value: "," + element.value;
+       finalUrl += finalUrl === "/training-plans?"? "distance=" + element.value: "," + element.value;
     });
 
     [].forEach.call(fields, function (element) {
-       finalUrl += !finalUrl.includes("field")? (finalUrl === "/exercises?"? "field=": "&field=") + element.value: "," + element.value;
+       finalUrl += !finalUrl.includes("field")? (finalUrl === "/training-plans?"? "field=": "&field=") + element.value: "," + element.value;
     });
 
     [].forEach.call(experiences, function (element) {
-        finalUrl += !finalUrl.includes("experience")? (finalUrl === "/exercises?"? "experience=": "&experience=") + element.value: "," + element.value;
+        finalUrl += !finalUrl.includes("experience")? (finalUrl === "/training-plans?"? "experience=": "&experience=") + element.value: "," + element.value;
     });
+
+    window.location.href = finalUrl;
+}
+
+function findProductsByFilters() {
+    let finalUrl = "/products?";
+    let minPrice = $("#min-price");
+    let maxPrice = $("#max-price")
+
+    $(".product-category").map(function () {
+        if ($(this).is(":checked"))
+            finalUrl += finalUrl.includes("category") ? "," + this.value : "category=" + this.value;
+    });
+
+    let typeUrl = finalUrl.includes("category")? "&": "";
+
+    $(".product-type").map(function () {
+        if ($(this).is(":checked"))
+            typeUrl += typeUrl.includes("type") ? "," + this.value : "type=" + this.value;
+    });
+
+    if (typeUrl.includes("type"))
+        finalUrl += typeUrl;
+
+    let rateUrl = finalUrl === "/products?"? "rate=": "&rate=";
+    $('input[name="rate"]').map(function() {
+        if ($(this).is(":checked")) {
+            rateUrl += this.value + ",5";
+            finalUrl += rateUrl;
+        }
+    });
+
+    let priceUrl = finalUrl.includes("type") ? "&price=" : "price=";
+
+    if ($(minPrice).val() && $(maxPrice).val())
+        finalUrl += priceUrl + $(minPrice).val() + "," + $(maxPrice).val();
+    else if (!$(minPrice).val() && $(maxPrice).val())
+        finalUrl += priceUrl + "0," + $(maxPrice).val();
+    else if ($(minPrice).val() && !$(maxPrice).val())
+        if ($(minPrice).val() > 0)
+            finalUrl += priceUrl + $(minPrice).val() + ",100000";
+
+    let order = $("#order").val();
+
+    if (order !== 'none') {
+        finalUrl += "&order=" + order;
+    }
 
     window.location.href = finalUrl;
 }
@@ -235,7 +288,7 @@ function changeViewAs(viewType) {
     document.cookie = "VIEW-AS=" + viewType.id.toUpperCase();
     viewType.classList.add("active");
 
-    //window.location.href = "";
+    window.location.href = "/";
 }
 
 function fillRaceFiltersByUrlParams() {
@@ -272,7 +325,8 @@ function fillRaceFiltersByUrlParams() {
     });
 }
 
-function fillExerciseFiltersByUrlParams() {
+function fillTrainingPlanFiltersByUrlParams() {
+    console.log("EP");
     let distances = getUrlParameter("distance");
     let fieldOptions = getUrlParameter("field");
     let experiences = getUrlParameter("experience");
@@ -306,4 +360,112 @@ function fillExerciseFiltersByUrlParams() {
             }
         })
     }
+}
+
+function fillProductsFiltersByUrlParams() {
+    let categories = getUrlParameter("category").split(",");
+    let types = getUrlParameter("type").split(",");
+    let rates = getUrlParameter("rate").split(",");
+    let prices = getUrlParameter("price").split(",");
+
+    $('input[name="type"]').map(function () {
+        if (types.includes(this.value)) {
+            this.checked = true;
+        }
+    });
+
+    $('input[name="category"]').map(function () {
+        if (categories.includes(this.value)) {
+            this.checked = true;
+            $('#' + this.value.toLowerCase() + '-types').toggle();
+        }
+    });
+
+    $('input[name="rate"]').map(function () {
+       if (rates[0] === this.value) {
+           this.checked = true;
+       }
+    });
+
+    if (prices.length === 2) {
+        $('#min-price').val(prices[0]);
+        $('#max-price').val(prices[1]);
+    }
+}
+
+function setFavorites(favorites) {
+    [].forEach.call(document.querySelectorAll('[id^="add-favorite-"]'), function (element) {
+        let id = Number(element.id.replace("add-favorite-", ""));
+        if (favorites.includes(id)) {
+            document.getElementById("add-favorite-" + id).hidden = true;
+            document.getElementById("remove-favorite-" + id).hidden = false;
+        } else {
+            document.getElementById("add-favorite-" + id).hidden = false;
+            document.getElementById("remove-favorite-" + id).hidden = true;
+        }
+    });
+}
+
+function showHideFilters() {
+    let filters = document.getElementById('filters');
+    let trigger = document.getElementById('triggerFilters');
+    let order = document.getElementById('order');
+
+    filters.hidden = !filters.hidden;
+    if (order !== null)
+        order.hidden = !order.hidden;
+    trigger.innerText = filters.hidden? 'Show Filters': 'Hide Filters';
+}
+
+// GET Request for Notifications
+function createNotifications() {
+    function notificationHTML(title, body, id, url) {
+        return  '<li class="dropdown-item notification" >\n' +
+                '<div class="row">\n' +
+                '<div class="col-11">' +
+                '<a style="text-decoration: none; color: white" href="' + url + '">\n' +
+                '<strong class="notification_span">' + title + '</strong>\n' +
+                '<span class="notification_span">' + body + '</span>\n' +
+                '</a>\n' +
+                '</div>\n' +
+                '<button type="button" class="col-1 btn-light btn-close ms-auto delete-notif" style="width: 19px" id="' + id + '" onclick="deleteNotification(this)" aria-label="Close"></button>\n' +
+                '</div> \n' +
+                '</li>';
+    }
+
+    let wrapper = $('#notification-wrapper');
+
+    $.get("/notifications", function(notifications){
+        if (notifications.length === 0) {
+            wrapper.append("<li class='dropdown-item-text'>0 Notifications</li>")
+        }
+
+        for (let notification of notifications) {
+            let currentNotification = notificationHTML(notification.title, notification.body, notification.id, notification.url);
+            if (!wrapper.html().includes(currentNotification))
+                wrapper.append(currentNotification);
+        }
+
+        wrapper.append("<li><hr class='dropdown-divider'></li>");
+        wrapper.append('<li><a class="dropdown-item" href="/profile?p=notifications">Show All</a></li>');
+    })
+    .fail(function() {
+        wrapper.append("<li class='dropdown-item'>Failed Loading Notifications</li>");
+    });
+}
+
+function deleteNotification(notification) {
+    $.get("/notifications/delete/" + notification.id, function () {
+        $("#" + notification.id).parent().parent().remove();
+        if (window.location.href.includes('/profile'))
+            $("#" + notification.id).parent().parent().remove();
+    });
+}
+
+function deleteAllNotifications() {
+    $.get("/notifications/delete-all", function () {
+        $('#notification-wrapper li.notification').map(function() {
+            this.remove();
+        });
+    });
 }

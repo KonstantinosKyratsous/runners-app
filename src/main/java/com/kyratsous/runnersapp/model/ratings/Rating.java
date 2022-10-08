@@ -5,6 +5,7 @@ import com.kyratsous.runnersapp.model.User;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import javax.persistence.Column;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
@@ -15,12 +16,15 @@ public class Rating extends BaseEntity {
 
     @NotNull
     private int rate;
+    @Column(columnDefinition = "TEXT")
     private String description;
     @NotNull
     @ManyToOne
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    public Rating() {}
 
     public int getRate() {
         return rate;

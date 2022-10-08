@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{navigation-bar :: navbar (~{::body}, ~{::title})}">
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+</head>
+<body>
+
+<div class="container my-2">
+    <div class="col-8" style="margin: auto">
+        <h5>Actions</h5>
+        <div class="row">
+            <a class="col-6" href="/my-diets/new" style="text-decoration: none; margin-bottom: 10px">
+                <div class="rounded d-flex align-items-center justify-content-center" style="background-color: #e9692c; color: white; height: 120px">
+                    <h3>+ Register a new diet</h3>
+                </div>
+            </a>
+            <a class="col-6" href="/my-diets" style="text-decoration: none; margin-bottom: 10px">
+                <div class="rounded d-flex align-items-center justify-content-center" style="background-color: #e9692c; color: white; height: 120px">
+                    <h3>Show all of my diets</h3>
+                </div>
+            </a>
+        </div>
+        <hr/>
+
+        <h5>My Diets</h5>
+        <div class="card" th:each="diet,dietStat: ${diets}" th:if="${dietStat.index < 4}">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col-10">
+                        <h4 th:text="${diet.title}"></h4>
+                    </div>
+                    <div class="col-2">
+                        <a th:href="@{/my-diets/{id}/update (id=${diet.id})}" style="float: right">
+                            <img src="/resources/icons/edit.svg" alt="edit" width="20">
+                        </a>
+                        <a th:href="@{/my-diets/{id}/delete (id=${diet.id})}" style="float: right">
+                            <img src="/resources/icons/delete.svg" alt="delete" width="20">
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <p class="card-text three-line-text" th:text="${diet.body}"></p>
+                <a th:href="@{/diets/{id} (id=${diet.id})}">See the full diet post</a>
+            </div>
+
+            <br/>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

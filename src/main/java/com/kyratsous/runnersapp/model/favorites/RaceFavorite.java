@@ -17,7 +17,7 @@ public class RaceFavorite extends Favorite {
     @NotNull
     @ManyToOne
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "race_id")
+    @JoinColumn(name = "race_id", nullable = false)
     private Race race;
 
     public RaceFavorite() {}

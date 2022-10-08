@@ -53,17 +53,17 @@ public class RaceService implements CrudService<Race, Long> {
             return;
 
         currentRace.setTitle(race.getTitle());
-        currentRace.setDate(race.getDate());
+        currentRace.setDescription(race.getDescription());
         currentRace.setDistanceOptions(race.getDistanceOptions());
         currentRace.setFieldOptions(race.getFieldOptions());
         currentRace.setLatitude(race.getLatitude());
         currentRace.setLongitude(race.getLongitude());
         currentRace.setLocation(race.getLocation());
+        currentRace.setDate(race.getDate());
         currentRace.setPrice(race.getPrice());
-        currentRace.setDescription(race.getDescription());
+        currentRace.setRegistrationLink(race.getRegistrationLink());
         if (race.getFile() != null)
             currentRace.setFile(race.getFile());
-        currentRace.setRegistrationLink(race.getRegistrationLink());
 
         raceRepository.save(currentRace);
     }

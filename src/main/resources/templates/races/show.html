@@ -14,10 +14,10 @@
         </div>
     </a>
 
-    <div class="row">
+    <div class="row mx-auto">
         <div class="col-7 custom-frame">
             <h3 th:text="${race.title}" id="race_title"></h3>
-            <small><span class="type-tag" th:each="type : ${race.distanceOptions}" th:text="${type}"></span></small>
+            <small><span class="hashtag" th:each="type : ${race.distanceOptions}" th:text="${type}"></span></small>
             <br/><br/>
             <p th:text="${race.description}" th:align="justify" style="white-space: pre-wrap"></p>
         </div>
@@ -55,6 +55,74 @@
                     <span>Remove Favorite</span>
                     <img src="/resources/icons/heart-filled.svg" alt="heart-filled" width="21">
                 </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-7 custom-frame me-auto" th:unless="${#authentication.getPrincipal() == 'anonymousUser'}">
+        <div class="d-flex justify-content-center">
+
+            <form class="form-group" th:action="@{/races/{id}/rating (id=${race.id})}" th:object="${newRating}"
+                  method="post">
+                <h4 style="text-align: center">Rate this race</h4>
+                <div>
+                    <input type="hidden" id="selected_rating" name="selected_rating" value="" required="required"
+                           th:field="*{rate}">
+                    <h2 class="bold rating-header" hidden>
+                        <span class="selected-rating">0</span><small> / 5</small>
+                    </h2>
+                    <button type="button" class="btn-rating btn btn-default btn-lg" data-attr="1" id="rating-star-1">
+                        <i class="fa fa-star" aria-hidden="true"></i>
+                    </button>
+                    <button type="button" class="btn-rating btn btn-default btn-lg" data-attr="2" id="rating-star-2">
+                        <i class="fa fa-star" aria-hidden="true"></i>
+                    </button>
+                    <button type="button" class="btn-rating btn btn-default btn-lg" data-attr="3" id="rating-star-3">
+                        <i class="fa fa-star" aria-hidden="true"></i>
+                    </button>
+                    <button type="button" class="btn-rating btn btn-default btn-lg" data-attr="4" id="rating-star-4">
+                        <i class="fa fa-star" aria-hidden="true"></i>
+                    </button>
+                    <button type="button" class="btn-rating btn btn-default btn-lg" data-attr="5" id="rating-star-5">
+                        <i class="fa fa-star" aria-hidden="true"></i>
+                    </button>
+                </div>
+                <br/>
+
+                <textarea th:field="*{description}" style="width: 100%" rows="3"
+                          placeholder="Add a description (Optional)"></textarea>
+
+                <div class="d-flex justify-content-center">
+                    <button type="submit" class="btn"
+                            style="display: block; width: 100%; background-color: #e9692c; color: white">Rate
+                    </button>
+                </div>
+                <br/><br/><br/>
+            </form>
+        </div>
+        <h4 th:text="${ratings.size()} + ' Ratings'"></h4>
+        <div>
+            <div th:each="rating: ${ratings}">
+                <hr/>
+                <div class="float-end" th:if="${#authentication.name == rating.user.username}">
+                    <a type="button"
+                       th:href="@{/races/{id}/rating/{rate_id}/delete (id=${race.id}, rate_id=${rating.id})}">
+                        <img src="/resources/icons/delete.svg" width="20" alt="deleteButton">
+                    </a>
+                </div>
+                <div class="d-flex">
+                    <div th:each="i : ${#numbers.sequence( 1, rating.rate, 1)}">
+                        <i class="fa fa-star" style="color: #e9692c"></i>
+                    </div>
+                    <div th:each="i : ${#numbers.sequence(rating.rate+1, 5, 1)}">
+                        <i class="fa fa-star" style="color: grey"></i>
+                    </div>
+                </div>
+
+                <a style="text-decoration: none" th:href="@{/user/{username} (username=${rating.user.username})}">
+                    <small><em th:text="'by ' + ${rating.user.username}"></em></small>
+                </a>
+                <p th:text="${rating.description}"></p>
             </div>
         </div>
     </div>

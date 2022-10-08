@@ -34,9 +34,11 @@
                     <p class="card-text three-line-text" th:text="${race.description}"></p>
                     <a th:href="@{/races/{id} (id=${race.id})}">See the full race post</a>
 
-                    <a th:href="@{/races/{id}/remove-favorite (id=${race.id})}" title="Remove from favorites">
-                        <img src="/resources/icons/heart-filled.svg" style="width: 21px; float: right" alt="heart-filled">
-                    </a>
+                    <a hidden class="add-favorite" th:if="${#authentication.principal != 'anonymousUser'}" style="float: right"
+                       title="Add to favorites" th:id="${'add-favorite-' + race.id}" onclick="addFavorite(this)"></a>
+
+                    <a class="remove-favorite" th:if="${#authentication.principal != 'anonymousUser'}" style="float: right"
+                       title="Remove from favorites" th:id="${'remove-favorite-' + race.id}" onclick="removeFavorite(this)"></a>
                 </div>
             </div>
             <br/>

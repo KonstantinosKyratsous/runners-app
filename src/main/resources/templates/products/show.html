@@ -15,32 +15,71 @@
     </a>
 
     <div class="row custom-frame">
-        <div class="col-6">
+        <div class="col-5">
             <img th:src="@{/products/{id}/image (id=${product.id})}" style="width: 100%" alt="">
         </div>
-        <div class="col-6">
+        <div class="col-7">
             <h4 th:text="${product.name}" id="product-name"></h4>
             <hr/>
-
-            <strong>Average Price :</strong> <span th:text="${product.price} + '€'"></span>
+            <div class="d-flex aligns-items-center" style="margin: 10px 0">
+                <img th:src="${product.rate>=1}? '/resources/icons/rating.svg': (${product.rate == 0.5}? '/resources/icons/rating-half.svg': '/resources/icons/rating-empty.svg')"
+                     alt="star" style="width: 21px">
+                <img th:src="${product.rate>=2}? '/resources/icons/rating.svg': (${product.rate == 1.5}? '/resources/icons/rating-half.svg': '/resources/icons/rating-empty.svg')"
+                     alt="star" style="width: 21px">
+                <img th:src="${product.rate>=3}? '/resources/icons/rating.svg': (${product.rate == 2.5}? '/resources/icons/rating-half.svg': '/resources/icons/rating-empty.svg')"
+                     alt="star" style="width: 21px">
+                <img th:src="${product.rate>=4}? '/resources/icons/rating.svg': (${product.rate == 3.5}? '/resources/icons/rating-half.svg': '/resources/icons/rating-empty.svg')"
+                     alt="star" style="width: 21px">
+                <img th:src="${product.rate>=5}? '/resources/icons/rating.svg': (${product.rate == 4.5}? '/resources/icons/rating-half.svg': '/resources/icons/rating-empty.svg')"
+                     alt="star" style="width: 21px">
+                <em style="margin-left: 10px">rated by
+                    <a style="color: #333333" th:href="${'/user/' + product.coach.username + '?p=products'}"
+                       th:text="' ' + ${product.coach.firstName + ' ' + product.coach.lastName}"></a> at
+                    <span th:text="${#dates.format(product.date, 'dd/MM/yyyy')}"></span>
+                </em>
+            </div>
             <hr/>
-
+            <div class="d-flex aligns-items-center">
+                <span style="margin:auto 10px auto 0; height: fit-content">
+                    <strong>Category:</strong>
+                    <a rel="tag" th:text="${product.category}" th:href="${'/products?category=' + product.category} "></a>
+                </span>
+                <span style="margin:auto; height: fit-content">
+                    <strong>Type:</strong>
+                    <a rel="tag" th:text="${product.type}" th:href="${'/products?type=' + product.type} "></a>
+                </span>
+                <div class="ms-auto">
+                    <a th:if="${#authentication.principal != 'anonymousUser'}" id="add-favorite" class="btn btn-light btn-favorite">
+                        <span>Add Favorite</span>
+                        <img src="/resources/icons/heart.svg" alt="heart" width="21">
+                    </a>
+                    <a th:if="${#authentication.principal != 'anonymousUser'}" hidden id="remove-favorite" class="btn btn-light btn-favorite">
+                        <span>Remove Favorite</span>
+                        <img src="/resources/icons/heart-filled.svg" alt="heart-filled" width="21">
+                    </a>
+                </div>
+            </div>
+            <hr/>
+            <div class="row">
+                <div class="col-12">
+                    <h4>Pros</h4>
+                    <ul class="positive-ul">
+                        <li th:each="pro: ${product.pros}" th:text="${pro}" class="positive-li"></li>
+                    </ul>
+                </div>
+                <div class="col-12">
+                    <h4>Cons</h4>
+                    <ul class="negative-ul">
+                        <li th:each="con: ${product.cons}" th:text="${con}" class="negative-li"></li>
+                    </ul>
+                </div>
+            </div>
+            <hr/>
+            <h4>Summary</h4>
             <p th:text="${product.description}" th:align="justify"></p>
             <hr/>
-
-            <span>
-                <strong>Category:</strong>
-                <a rel="tag" th:text="${product.type}" th:href="@{/products?type={type} (type=${product.type})} "></a>
-            </span>
+            <strong>Average Price :</strong> <span th:text="${product.price} + '€'"></span>
             <hr/>
-            <a th:if="${#authentication.principal != 'anonymousUser'}" id="add-favorite" class="btn btn-light btn-favorite">
-                <span>Add Favorite</span>
-                <img src="/resources/icons/heart.svg" alt="heart" width="21">
-            </a>
-            <a th:if="${#authentication.principal != 'anonymousUser'}" hidden id="remove-favorite" class="btn btn-light btn-favorite">
-                <span>Remove Favorite</span>
-                <img src="/resources/icons/heart-filled.svg" alt="heart-filled" width="21">
-            </a>
         </div>
     </div>
     <br/>

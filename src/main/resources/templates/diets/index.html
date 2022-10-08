@@ -7,8 +7,8 @@
 <body>
 
 <div class="container my-2">
-    <div th:each="diet: ${diets}">
-        <div class="card">
+    <div class="col-9 mx-auto">
+        <div class="card" th:each="diet: ${diets}" style="margin-bottom: 21px">
             <div class="card-header">
                 <h4 th:text="${diet.title}"></h4>
             </div>
@@ -16,31 +16,21 @@
             <div class="card-body">
                 <p class="card-text three-line-text" th:text="${diet.body}"></p>
                 <a th:href="@{/diets/{id} (id=${diet.id})}">See the full diet post</a>
-                <a th:if="${#authentication.principal != 'anonymousUser'}" th:id="${'add-favorite-' + diet.id}" onclick="addFavorite(this)" title="Add to favorites">
-                    <img src="/resources/icons/heart.svg" style="width: 21px; float: right; cursor: pointer" alt="heart">
-                </a>
-                <a th:if="${#authentication.principal != 'anonymousUser'}" th:id="${'remove-favorite-' + diet.id}" onclick="removeFavorite(this)" title="Remove from favorites">
-                    <img src="/resources/icons/heart-filled.svg" style="width: 21px; float: right; cursor: pointer" alt="heart-filled">
-                </a>
+
+                <a class="add-favorite" th:if="${#authentication.principal != 'anonymousUser'}" style="float: right"
+                   title="Add to favorites" th:id="${'add-favorite-' + diet.id}" onclick="addFavorite(this)"></a>
+
+                <a hidden class="remove-favorite" th:if="${#authentication.principal != 'anonymousUser'}" style="float: right"
+                   title="Remove from favorites" th:id="${'remove-favorite-' + diet.id}" onclick="removeFavorite(this)"></a>
             </div>
         </div>
-        <br/>
     </div>
 </div>
 
 <script>
-    let diets = document.querySelectorAll('[id^="add-favorite-"]');
-    let favorites = [[${favorites}]];
-
-    [].forEach.call(diets, function (element) {
-        let id = Number(element.id.replace("add-favorite-", ""));
-        if (favorites.includes(id)) {
-            document.getElementById("add-favorite-" + id).hidden = true;
-            document.getElementById("remove-favorite-" + id).hidden = false;
-        }else {
-            document.getElementById("add-favorite-" + id).hidden = false;
-            document.getElementById("remove-favorite-" + id).hidden = true;
-        }
+    $(document).ready(function () {
+        let favorites = [[${favorites}]];
+        setFavorites(favorites);
     });
 </script>
 </body>

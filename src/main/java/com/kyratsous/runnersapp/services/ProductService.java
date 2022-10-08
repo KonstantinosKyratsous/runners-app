@@ -53,10 +53,11 @@ public class ProductService implements CrudService<Product, Long> {
         currentProduct.setName(product.getName());
         currentProduct.setCategory(product.getCategory());
         currentProduct.setType(product.getType());
-        currentProduct.setPrice(product.getPrice());
-        currentProduct.setDescription(product.getDescription());
+        currentProduct.setRate(product.getRate());
         if (product.getImage() != null)
             currentProduct.setImage(product.getImage());
+        currentProduct.setPrice(product.getPrice());
+        currentProduct.setDescription(product.getDescription());
         currentProduct.setPros(product.getPros());
         currentProduct.setCons(product.getCons());
 
@@ -69,7 +70,13 @@ public class ProductService implements CrudService<Product, Long> {
     }
 
     public Set<Product> findFilteredProducts(Map<String, String> filters) {
-        Set<Product> results = findAll();
+        Set<Product> results;
+
+        if (filters.get("order") != null) {
+            results = Objects.equals(filters.get("order"), "asc")? productRepository.findAllByOrderByRateAsc(): productRepository.findAllByOrderByRateDesc();
+        } else {
+            results = findAll();
+        }
 
         if (filters.get("category") != null) {
             Set<String> categories = new HashSet<>(Arrays.asList(filters.get("category").split(",")));
@@ -79,6 +86,14 @@ public class ProductService implements CrudService<Product, Long> {
         if (filters.get("type") != null) {
             Set<String> types = new HashSet<>(Arrays.asList(filters.get("type").split(",")));
             results.retainAll(productRepository.findAllByTypeIsIn(types));
+        }
+
+        if (filters.get("rate") != null) {
+            String[] rates = filters.get("rate").split(",");
+            double minRate = Double.parseDouble(rates[0]);
+            double maxRate = Double.parseDouble(rates[1]);
+
+            results.retainAll(productRepository.findAllByRateBetween(minRate, maxRate));
         }
 
         if (filters.get("price") != null) {

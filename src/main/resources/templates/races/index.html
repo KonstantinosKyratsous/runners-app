@@ -12,57 +12,23 @@
 
 <div class="container my-2">
     <div class="row my-2">
-        <div class="col-3" style="box-shadow: 2px 0 0 0 #888">
+        <div hidden class="col-3" style="box-shadow: 2px 0 0 0 #888" id="filters">
             <h5 class="column-header">Filters</h5><br/>
             <form class="filter-form">
                 <h6>Distance types</h6>
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="distance-5k" value="5k">
-                    <label class="form-check-label" for="distance-5k">5k</label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="distance-10k" value="10k">
-                    <label class="form-check-label" for="distance-10k">10k</label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="distance-15k" value="15k">
-                    <label class="form-check-label" for="distance-15k">15k</label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="distance-half-marathon" value="Half Marathon">
-                    <label class="form-check-label" for="distance-half-marathon">Half Marathon</label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="distance-marathon" value="Marathon">
-                    <label class="form-check-label" for="distance-marathon">Marathon</label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="distance-ultra-marathon" value="Ultra Marathon">
-                    <label class="form-check-label" for="distance-ultra-marathon">Ultra Marathon</label>
+                <div class="form-check" th:each="i: ${#numbers.sequence(0, 6)}">
+                    <input class="form-check-input" type="checkbox" th:id="'distance-' + #{distance.options[__${i}__]}" th:value="#{distance.options[__${i}__]}">
+                    <label class="form-check-label" th:for="'distance-' + #{distance.options[__${i}__]}" th:text="#{distance.options[__${i}__]}"></label>
                 </div>
                 <hr/>
+
                 <h6>Field types</h6>
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="field-road" value="Road">
-                    <label class="form-check-label" for="field-road">Road</label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="field-trail" value="Trail">
-                    <label class="form-check-label" for="field-trail">Trail</label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="field-track" value="Track">
-                    <label class="form-check-label" for="field-track">Track</label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="field-fun" value="Fun">
-                    <label class="form-check-label" for="field-fun">Fun</label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="field-obstacles" value="Obstacle">
-                    <label class="form-check-label" for="field-obstacles">Obstacle</label>
+                <div class="form-check" th:each="i: ${#numbers.sequence(0, 3)}">
+                    <input class="form-check-input" type="checkbox" th:id="'field-' + #{field.options[__${i}__]}" th:value="#{field.options[__${i}__]}">
+                    <label class="form-check-label" th:for="'field-' + #{field.options[__${i}__]}" th:text="#{field.options[__${i}__]}"></label>
                 </div>
                 <hr/>
+
                 <h6>Date</h6>
                 <input type="text" name="date-range" value="" id="date-range" style="width: 100%"/>
                 <hr/>
@@ -71,48 +37,55 @@
             </form>
         </div>
 
-        <div class="col-9">
+        <div class="col-9 mx-auto">
             <div class="row">
-                <h5 class="col-10" th:text="${races.size()} + ' Results'"></h5>
-                <select class="col-2" id="sort">
-                    <option th:selected="${param.get('sort') == null}" value="none">None</option>
-                    <option th:selected="${param.get('sort') != null && param.sort[0] == 'most-recent'}" value="most-recent">Most Recent</option>
-                    <option th:selected="${param.get('sort') != null && param.sort[0] == 'least-recent'}" value="least-recent">Least Recent</option>
-                </select>
-            </div><br/>
+                <div class="col-10">
+                    <div class="row">
+                        <h5 th:text="${races.size()} + ' Results'" style="width: fit-content"></h5>
+                        <a onclick="showHideFilters()" href="#" id="triggerFilters" style="width: fit-content">Show Filters</a>
+                    </div>
+                </div>
+                <div hidden id="order" class="col-2">
+                    <label for="sort"></label>
+                    <select id="sort" onchange="findRacesByFilters()">
+                        <option th:selected="${param.get('sort') == null}" value="none">None</option>
+                        <option th:selected="${param.get('sort') != null && param.sort[0] == 'most-recent'}" value="most-recent">Most Recent</option>
+                        <option th:selected="${param.get('sort') != null && param.sort[0] == 'least-recent'}" value="least-recent">Least Recent</option>
+                    </select>
+                </div>
+            </div>
+            <br/>
 
             <div class="result" th:each="race: ${races}"  style="margin-right: 0 !important">
                 <div class="card">
                     <div class="card-header">
-                        <h4 class="card-title" th:text="${race.title}"></h4>
+                        <h4 class="card-title one-line-text" th:text="${race.title}"></h4>
                     </div>
 
                     <div class="card-body">
                         <div class="row">
-                            <img class="col-sm-1" src="/resources/icons/location.svg" alt="Location" height="20px">
-                            <h6 class="col-3 race-location" style="left: 30px" th:text="${race.location}"></h6>
+                            <img style="width: fit-content; height: 20px" src="/resources/icons/location.svg" alt="Location">
+                            <h6 style="width:fit-content; left: 20px" th:text="${race.location}"></h6>
                         </div>
                         <div class="row">
-                            <img class="col-1" src="/resources/icons/date2.svg" alt="Date" height="20px">
-                            <h6 class="col-2" style="left: 30px"
-                                th:text="${#dates.format(race.date, 'dd/MM/yyyy')}"></h6>
+                            <img style="width: fit-content; height: 20px" src="/resources/icons/date2.svg" alt="Date">
+                            <h6 style="width:fit-content; left: 20px" th:text="${#dates.format(race.date, 'dd/MM/yyyy')}"></h6>
                         </div>
 
                         <p class="card-text three-line-text" th:text="${race.description}"></p>
                         <a th:href="@{/races/{id} (id=${race.id})}">See the full race post</a>
 
-                        <a th:if="${#authentication.principal != 'anonymousUser'}" th:id="${'add-favorite-' + race.id}" onclick="addFavorite(this)" title="Add to favorites">
-                            <img src="/resources/icons/heart.svg" style="width: 21px; float: right; cursor: pointer" alt="heart">
-                        </a>
-                        <a th:if="${#authentication.principal != 'anonymousUser'}" hidden th:id="${'remove-favorite-' + race.id}" onclick="removeFavorite(this)" title="Remove from favorites">
-                            <img src="/resources/icons/heart-filled.svg" style="width: 21px; float: right; cursor: pointer" alt="heart-filled">
-                        </a>
+                        <a class="add-favorite" th:if="${#authentication.principal != 'anonymousUser'}" style="float: right"
+                           title="Add to favorites" th:id="${'add-favorite-' + race.id}" onclick="addFavorite(this)"></a>
+
+                        <a hidden class="remove-favorite" th:if="${#authentication.principal != 'anonymousUser'}" style="float: right"
+                           title="Remove from favorites" th:id="${'remove-favorite-' + race.id}" onclick="removeFavorite(this)"></a>
                     </div>
                     <div class="card-footer">
-                        <span>Available races: </span>
-                        <span th:each="distance: ${race.distanceOptions}" th:text="${distance}" class="hashtag"></span>
-                        <span>Field type: </span>
-                        <span th:each="field: ${race.fieldOptions}" th:text="${field}" class="hashtag"></span>
+                        <small><strong th:if="${race.distanceOptions.size() > 0}">Available races: </strong></small>
+                        <small><span th:each="distance: ${race.distanceOptions}" th:text="${distance}" class="hashtag"></span></small>
+                        <small><strong th:if="${race.fieldOptions.size() > 0}">Field type: </strong></small>
+                        <small><span th:each="field: ${race.fieldOptions}" th:text="${field}" class="hashtag"></span></small>
                     </div>
                 </div>
                 <br/>
@@ -122,34 +95,11 @@
 </div>
 
 <script>
-    jQuery(document).ready(function ($) {
+    $(document).ready(function () {
         fillRaceFiltersByUrlParams();
-    });
 
-    let races = document.querySelectorAll('[id^="add-favorite-"]');
-    let favorites = [[${favorites}]];
-
-    [].forEach.call(races, function (element) {
-        let id = Number(element.id.replace("add-favorite-", ""));
-        if (favorites.includes(id)) {
-            document.getElementById("add-favorite-" + id).hidden = true;
-            document.getElementById("remove-favorite-" + id).hidden = false;
-        }else {
-            document.getElementById("add-favorite-" + id).hidden = false;
-            document.getElementById("remove-favorite-" + id).hidden = true;
-        }
-    });
-
-    $('#sort').change(function () {
-        findRacesByFilters();
-        // let url = window.location.href;
-        // console.log(url);
-        // if ($(this).val() === 'none')
-        //     url = url.replace("sort=most-recent", "");
-        // else if ($(this).val() === 'most-recent')
-        //     url += (url === "/races" || url === "/races?")? "?sort=most-recent": "&sort=most-recent";
-        //
-        // window.location.href = url;
+        let favorites = [[${favorites}]];
+        setFavorites(favorites);
     });
 </script>
 </body>

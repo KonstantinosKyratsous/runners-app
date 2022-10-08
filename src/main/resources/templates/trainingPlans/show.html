@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{navigation-bar :: navbar (~{::body}, ~{::title})}">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+
+<div class="container my-2">
+    <a href="/training-plans" style="color: black; text-decoration: none">
+        <div class="col-8" style="margin: auto; padding-bottom: 5px; cursor: pointer">
+            <img src="/resources/icons/back2.svg" alt="Back" style="height: 20px">
+            <strong style="vertical-align: middle">Back to Training Plans</strong>
+        </div>
+    </a>
+
+    <div class="col-8 custom-frame" style="margin: auto">
+        <h3 th:text="${trainingPlan.title}" id="training_plan_title" th:align="justify"></h3>
+        <em><small th:text="${'posted by ' + trainingPlan.coach.firstName + ' ' + trainingPlan.coach.lastName + ' at ' + #dates.format(trainingPlan.date, 'dd/MM/yyyy')}"></small></em>
+        <a th:if="${#authentication.principal != 'anonymousUser'}" id="add-favorite" class="btn btn-light btn-favorite" style="float: right;">
+            <span>Add Favorite</span>
+            <img src="/resources/icons/heart.svg" alt="heart" width="21">
+        </a>
+        <a th:if="${#authentication.principal != 'anonymousUser'}" hidden id="remove-favorite" class="btn btn-light btn-favorite" style="float: right;">
+            <span>Remove Favorite</span>
+            <img src="/resources/icons/heart-filled.svg" alt="heart-filled" width="21">
+        </a>
+        <br/><br/>
+        <hr/>
+        <p th:text="'Level: ' + ${trainingPlan.experience}"></p>
+        <span>Run: </span>
+        <span th:each="distance : ${trainingPlan.distanceOptions}" th:text="${distance} + ' '"></span>
+        <hr/>
+        <p th:text="${trainingPlan.body}" th:align="justify" style="white-space: pre-line"></p>
+    </div>
+    <br/>
+    <div class="col-8 custom-frame" style="margin: auto">
+        <div class="d-flex justify-content-center" th:unless="${#authentication.getPrincipal() == 'anonymousUser'}">
+
+            <form class="form-group" th:action="@{/training-plans/{id}/rating (id=${trainingPlan.id})}" th:object="${newRating}"
+                  method="post">
+                <h4 style="text-align: center">Rate this product</h4>
+                <div>
+                    <input type="hidden" id="selected_rating" name="selected_rating" value="" required="required"
+                           th:field="*{rate}">
+                    <h2 class="bold rating-header" hidden>
+                        <span class="selected-rating">0</span><small> / 5</small>
+                    </h2>
+                    <button type="button" class="btn-rating btn btn-default btn-lg" data-attr="1" id="rating-star-1">
+                        <i class="fa fa-star" aria-hidden="true"></i>
+                    </button>
+                    <button type="button" class="btn-rating btn btn-default btn-lg" data-attr="2" id="rating-star-2">
+                        <i class="fa fa-star" aria-hidden="true"></i>
+                    </button>
+                    <button type="button" class="btn-rating btn btn-default btn-lg" data-attr="3" id="rating-star-3">
+                        <i class="fa fa-star" aria-hidden="true"></i>
+                    </button>
+                    <button type="button" class="btn-rating btn btn-default btn-lg" data-attr="4" id="rating-star-4">
+                        <i class="fa fa-star" aria-hidden="true"></i>
+                    </button>
+                    <button type="button" class="btn-rating btn btn-default btn-lg" data-attr="5" id="rating-star-5">
+                        <i class="fa fa-star" aria-hidden="true"></i>
+                    </button>
+                </div>
+                <br/>
+
+                <textarea th:field="*{description}" style="width: 100%" rows="3"
+                          placeholder="Add a description (Optional)"></textarea>
+
+                <div class="d-flex justify-content-center">
+                    <button type="submit" class="btn"
+                            style="display: block; width: 100%; background-color: #e9692c; color: white">Rate
+                    </button>
+                </div>
+                <br/><br/><br/>
+            </form>
+        </div>
+        <h4 th:text="${ratings.size()} + ' Ratings'"></h4>
+        <div>
+            <div th:each="rating: ${ratings}">
+                <hr/>
+                <div class="float-end" th:if="${#authentication.name == rating.user.username}">
+                    <a type="button"
+                       th:href="@{/training-plans/{id}/rating/{rate_id}/delete (id=${trainingPlan.id}, rate_id=${rating.id})}">
+                        <img src="/resources/icons/delete.svg" width="20" alt="deleteButton">
+                    </a>
+                </div>
+                <div class="d-flex">
+                    <div th:each="i : ${#numbers.sequence( 1, rating.rate, 1)}">
+                        <i class="fa fa-star" style="color: #e9692c"></i>
+                    </div>
+                    <div th:each="i : ${#numbers.sequence(rating.rate+1, 5, 1)}">
+                        <i class="fa fa-star" style="color: grey"></i>
+                    </div>
+                </div>
+
+                <a style="text-decoration: none" th:href="@{/user/{username} (username=${rating.user.username})}">
+                    <small><em th:text="'by ' + ${rating.user.username}"></em></small>
+                </a>
+                <p th:text="${rating.description}"></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    document.title = document.getElementById("training_plan_title").innerText;
+
+    if ([[${isFavorite}]]) {
+        document.getElementById("add-favorite").hidden = [[${isFavorite}]];
+        document.getElementById("remove-favorite").hidden = [[${!isFavorite}]];
+    }
+</script>
+
+</body>
+</html>

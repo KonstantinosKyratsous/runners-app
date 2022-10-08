@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{navigation-bar :: navbar (~{::body}, ~{::title})}">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Training Plan</title>
+</head>
+<body>
+
+<div class="container my-2">
+    <div class="row d-flex justify-content-center h-100">
+        <div class="col-12 col-md-9 col-lg-7 col-xl-7">
+            <div class="card shadow p-3 mb-5 bg-body rounded" style="border-radius: 15px;">
+                <div class="card-body p-5">
+                    <h2 class="text-uppercase text-center mb-5"> Create Training Plan </h2>
+                    <form th:action="@{/my-training-plans/new}" th:object="${trainingPlan}" method="post">
+                        <div class="form-outline mb-4">
+                            <input required
+                                   type="text"
+                                   class="form-control form-control-lg"
+                                   th:field="*{title}"
+                                   maxlength="255"
+                                   placeholder="Title">
+                        </div>
+                        <div class="form-outline mb-4">
+                            <select required name="experience" class="form-control form-control-lg">
+                                <option selected disabled value="">Choose experience</option>
+                                <option value="Novice">Novice</option>
+                                <option value="Intermediate">Intermediate</option>
+                                <option value="Advanced">Advanced</option>
+                            </select>
+                        </div>
+                        <i id="error-message" style="color: red; font-size: 12px"></i>
+                        <div class="form-outline mb-4" id="distance-checkboxes">
+                            <div class="form-control form-control-lg">
+                                <label>Choose race distance(s)</label><br/>
+                                <div class="form-check form-check-inline" th:each="i: ${#numbers.sequence(0, 6)}">
+                                    <input class="form-check-input" type="checkbox" th:id="'dist-' + #{distance.options[__${i}__]}" th:value="#{distance.options[__${i}__]}" th:field="*{distanceOptions}">
+                                    <label class="form-check-label" th:for="'dist-' + #{distance.options[__${i}__]}" th:text="#{distance.options[__${i}__]}"></label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-outline mb-4" id="field-checkboxes">
+                            <div class="form-control form-control-lg">
+                                <label>Choose race field(s)</label><br/>
+                                <div class="form-check form-check-inline" th:each="i: ${#numbers.sequence(0, 3)}">
+                                    <input class="form-check-input" type="checkbox" th:id="'field-' + #{field.options[__${i}__]}" th:value="#{field.options[__${i}__]}" th:field="*{fieldOptions}">
+                                    <label class="form-check-label" th:for="'field-' + #{field.options[__${i}__]}" th:text="#{field.options[__${i}__]}"></label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-outline mb-4">
+                        <textarea required
+                                  class="form-control form-control-lg"
+                                  rows="10"
+                                  th:field="*{body}"
+                                  placeholder="Main Post"></textarea>
+                        </div>
+
+                        <div class="d-flex justify-content-center">
+                            <button type="submit" class="btn btn-submit">Create Training Plan</button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

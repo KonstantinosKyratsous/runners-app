@@ -7,19 +7,22 @@
 <body>
 
 <div class="container my-2">
-    <div th:each="diet: ${diets}">
-        <div class="card">
+    <div class="col-9 mx-auto">
+        <div class="card my-3" th:each="diet: ${diets}">
             <div class="card-header">
                 <div class="row">
-                    <div class="col-sm-10">
+                    <div class="col-10">
                         <h4 th:text="${diet.title}"></h4>
                     </div>
-                    <div class="col-sm" style="align-content: end">
-                        <a th:href="@{/my-diets/{id}/update (id=${diet.id})}">Update</a>
+                    <div class="col-2">
+                        <a th:href="@{/my-diets/{id}/update (id=${diet.id})}" style="float: right">
+                            <img src="/resources/icons/edit.svg" alt="edit" width="20">
+                        </a>
+                        <a th:href="@{/my-diets/{id}/delete (id=${diet.id})}" style="float: right">
+                            <img src="/resources/icons/delete.svg" alt="delete" width="20">
+                        </a>
                     </div>
-                    <div class="col-sm" style="align-content: end">
-                        <a th:href="@{/my-diets/{id}/delete (id=${diet.id})}">Delete</a>
-                    </div>
+
                 </div>
             </div>
 
@@ -28,7 +31,6 @@
                 <a th:href="@{/diets/{id} (id=${diet.id})}">See the full diet post</a>
             </div>
         </div>
-        <br/>
     </div>
 </div>
 

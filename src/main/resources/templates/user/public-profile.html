@@ -2,12 +2,12 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{navigation-bar :: navbar (~{::body}, ~{::title})}">
 <head>
     <meta charset="UTF-8">
-    <title>User</title>
+    <title>Profile</title>
 </head>
 <body>
 
 <div class="container my-2">
-    <div th:if="${user != null}" class="col-10 custom-frame" style="margin: auto">
+    <div class="col-10 custom-frame mx-auto" th:if="${user != null}">
         <div style="text-align: center">
             <a th:href="@{/user/{username} (username=${user.username})}" style="text-decoration: none">
                 <img src="/resources/icons/user.svg" height="100">
@@ -16,160 +16,173 @@
                     th:text="${user.firstName} + ' ' + ${user.lastName}"></h4>
             </a>
             <a th:if="${user.username == #authentication.name}" class="btn"
-               style="display:inline-block; background-color: #e9692c; color: white">
+               style="display:inline-block; background-color: #e9692c; color: white" href="/user/update">
                 Edit
             </a>
         </div>
         <hr/>
-        <div class="row">
-            <div class="col-4"> <!-- User Info -->
-                <div class="card">
-                    <div class="card-body">
-                        <img class="mx-auto d-block" src="/resources/icons/user.svg" alt="User" height="80">
-                        <br/>
-                        <div class="row">
-                            <div class="col-6">
-                                <h6 class="mb-0">Full Name</h6>
-                            </div>
-                            <div class="col-6 text-secondary">
-                                <a th:text="${user.firstName + ' ' + user.lastName}"></a>
-                            </div>
-                        </div>
-                        <hr>
-                        <div class="row">
-                            <div class="col-6">
-                                <h6 class="mb-0">Username</h6>
-                            </div>
-                            <div class="col-6 text-secondary">
-                                <a th:text="${user.username}"></a>
-                            </div>
-                        </div>
-                        <hr>
-                        <div class="row">
-                            <div class="col-6">
-                                <h6 class="mb-0">E-mail</h6>
-                            </div>
-                            <div class="col-6 text-secondary">
-                                <a th:text="${user.email}"></a>
-                            </div>
-                        </div>
-                        <hr>
-                        <div th:if="${!user.distancePrefs.isEmpty()}">
-                            <div class="row">
-                                <div class="col-6">
-                                    <h6 class="mb-0">Distance Preferences</h6>
-                                </div>
-                                <div class="col-6 text-secondary">
-                                    <a th:each="distPref: ${user.distancePrefs}" th:text="${distPref + ' '}"></a>
-                                </div>
-                            </div>
-                            <hr>
-                        </div>
-                        <div th:if="${!user.fieldTypes.isEmpty()}">
-                            <div class="row">
-                                <div class="col-6">
-                                    <h6 class="mb-0">Field Preferences</h6>
-                                </div>
-                                <div class="col-6 text-secondary">
-                                    <a th:each="field: ${user.fieldTypes}" th:text="${field + ' '}"></a>
-                                </div>
-                            </div>
-                            <hr>
-                        </div>
-                        <div class="d-flex">
-                            <a href="/user/update" class="btn" style="background-color: #e9692c; color: white">Edit</a>
-                        </div>
-                    </div>
+
+        <div class="row" style="margin: 20px">
+            <div class="col-4">
+                <div class="row tab">
+                    <a th:class="${(param.get('p') == null || param.p[0] == 'user_info')? 'tab_btn active': 'tab_btn'}"
+                        href="?p=user_info">User Info</a>
+                    <a th:if="${user.username == #authentication.getName()}" href="?p=dashboard"
+                       th:class="${(param.get('p') != null && param.p[0] == 'dashboard')? 'tab_btn active': 'tab_btn'}">Dashboard</a>
+                    <a th:if="${user.username == #authentication.getName()}" href="?p=notifications"
+                       th:class="${(param.get('p') != null && param.p[0] == 'notifications')? 'tab_btn active': 'tab_btn'}">Notifications</a>
+                    <a class="tab_btn dropdown-toggle" id="created-menu">Created</a>
+
+                    <a hidden th:class="${'tab_btn tab-menu-item' + (param.get('p') != null && param.p[0] == 'races'? ' active': '')}"
+                       href="?p=races">Races</a>
+
+                    <a hidden th:class="${'tab_btn tab-menu-item' + (param.get('p') != null && param.p[0] == 'training-plans'? ' active': '')}"
+                       href="?p=training-plans">Training Plans</a>
+
+                    <a hidden th:class="${'tab_btn tab-menu-item' + (param.get('p') != null && param.p[0] == 'diets'? ' active': '')}"
+                       href="?p=diets">Diets</a>
+
+                    <a hidden th:class="${'tab_btn tab-menu-item' + (param.get('p') != null && param.p[0] == 'products'? ' active': '')}"
+                       href="?p=products">Products</a>
+
+                    <a th:if="${user.username == #authentication.getName()}" class="tab_btn dropdown-toggle" id="favorites">Favorites</a>
+                    <a hidden th:if="${user.username == #authentication.getName()}" class="tab_btn favorites" href="/races/favorites">Races</a>
+
+                    <a hidden th:if="${user.username == #authentication.getName()}" class="tab_btn favorites" href="/training-plans/favorites">Training Plans</a>
+
+                    <a hidden th:if="${user.username == #authentication.getName()}" class="tab_btn favorites" href="/diets/favorites">Diets</a>
+
+                    <a hidden th:if="${user.username == #authentication.getName()}" class="tab_btn favorites" href="/products/favorites">Products</a>
                 </div>
             </div>
-            <div class="col-8">
-                <nav class="navbar navbar-expand-lg navbar-light bg-light">
-                    <span style="margin-left: 5px" href=""><strong>Created</strong></span>
-                    <ul class="navbar-nav" style="margin: auto">
-                        <li class="nav-item">
-                            <a class="nav-link" href="?p=races">Races<span class="sr-only">(current)</span></a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="?p=exercises">Exercises</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="?p=diets">Diets</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="?p=products">Products</a>
-                        </li>
-                    </ul>
-                </nav>
-                <br/>
-                <div th:if="${param.get('p') != null && param.p[0] == 'races' && races.isEmpty()}"
-                     style="text-align: center">
-                    <span><em class="text-secondary" th:text="'No created races from ' + ${user.username}"></em></span>
-                </div>
-                <div th:if="${races != null}">
-                    <div class="result" th:each="race: ${races}">
-                        <div class="card">
-                            <div class="card-header">
-                                <h4 class="card-title" th:text="${race.title}"></h4>
+            <div class="col-8" style="border: 2px solid #333333; padding-top: 20px">
+                <div class="row">
+                    <!-- User Info -->
+                    <div th:if="${param.get('p') == null || param.p[0] == 'user_info'}">
+                        <div class="card-body">
+                            <div class="row">
+                                <h6 class="col-6 mb-0">Full Name</h6>
+                                <span class="col-6 text-secondary" th:text="${user.firstName + ' ' + user.lastName}"></span>
                             </div>
-
-                            <div class="card-body">
-                                <div class="row">
-                                    <img class="col-sm-1" src="/resources/icons/location.svg" alt="Location"
-                                         height="20px">
-                                    <h6 class="col-3 race-location" style="left: 30px" th:text="${race.location}"></h6>
-                                </div>
-                                <div class="row">
-                                    <img class="col-1" src="/resources/icons/date2.svg" alt="Date" height="20px">
-                                    <h6 class="col-2" style="left: 30px"
-                                        th:text="${#dates.format(race.date, 'dd/MM/yyyy')}"></h6>
-                                </div>
-
-                                <p class="card-text three-line-text" th:text="${race.description}"></p>
-                                <a th:href="@{/races/{id} (id=${race.id})}">See the full race post</a>
+                            <hr>
+                            <div class="row">
+                                <h6 class="col-6 mb-0">Username</h6>
+                                <span class="col-6 text-secondary" th:text="${user.username}"></span>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <h6 class="col-6 mb-0">E-mail</h6>
+                                <a class="col-6 text-secondary" th:text="${user.email}"></a>
                             </div>
                         </div>
-                        <br/>
                     </div>
-                </div>
 
-                <div th:if="${param.get('p') != null && param.p[0] == 'exercises' && exercises.isEmpty()}"
-                     style="text-align: center">
-                    <span><em class="text-secondary" th:text="'No created exercises from ' + ${user.username}"></em></span>
-                </div>
-                <div th:if="${exercises != null}">
-                    <div class="my-2" th:each="exercise: ${exercises}">
-                        <div class="card">
-                            <div class="card-header">
+                    <!-- Dashboard -->
+                    <div th:if="${param.get('p') != null && param.p[0] == 'dashboard' && user.username == #authentication.getName()}">
+                        <div th:if="${user.authorities.contains('ORGANIZER')}">
+                            <h4>Races</h4>
+                            <a th:href="@{/my-races/new}">Create Race</a><br/>
+                            <a th:href="@{/my-races}">Mange your races</a><br/>
+                            <a th:href="@{/races/favorites}">Favorite races</a><br/>
+                            <a th:href="@{/races}">See all races</a><br/><br/>
+                        </div>
+
+                        <div th:if="${user.authorities.contains('COACH')}">
+                            <h4>Training Plans</h4>
+                            <a th:href="@{/my-training-plans/new}">Create Training Plan</a><br/>
+                            <a th:href="@{/my-training-plans}">Mange your training plans</a><br/>
+                            <a th:href="@{/training-plans/favorites}">Favorite training plans</a><br/>
+                            <a th:href="@{/training-plans}">See all training plans</a><br/><br/>
+                        </div>
+
+                        <div th:if="${user.authorities.contains('NUTRITIONIST')}">
+                            <h4>Diets</h4>
+                            <a th:href="@{/my-diets/new}">Create Diet</a><br/>
+                            <a th:href="@{/my-diets}">Mange your diets</a><br/>
+                            <a th:href="@{/diets/favorites}">Favorite diets</a><br/>
+                            <a th:href="@{/diets}">See all diets</a><br/><br/>
+                        </div>
+
+                        <div th:if="${user.authorities.contains('COACH') || user.authorities.contains('ATHLETE')}">
+                            <h4>Products</h4>
+                            <a th:href="@{/my-products/new}">Create Product</a><br/>
+                            <a th:href="@{/my-products}">Mange your products</a><br/>
+                            <a th:href="@{/products/favorites}">Favorite products</a><br/>
+                            <a th:href="@{/products}">See all products</a><br/><br/>
+                        </div>
+                    </div>
+
+                    <!-- Notifications -->
+                    <div th:if="${param.get('p') != null && param.p[0] == 'notifications' && user.username == #authentication.getName()}">
+                        <div class="card-body">
+                            <h6 th:if="${notifications.isEmpty()}">There are no notifications</h6>
+                            <div th:each="notification: ${notifications}">
                                 <div class="row">
-                                    <div class="col-sm-10">
-                                        <h4 th:text="${exercise.title}"></h4>
+                                    <div class="col-11">
+                                        <a style="text-decoration: none; color: black" th:href="${notification.url}">
+                                            <strong class="mb-0" th:text="${notification.title}" style="width: fit-content"></strong><br/>
+                                            <span class="text-secondary three-line-text" th:text="${notification.body}"></span>
+                                        </a>
                                     </div>
+                                    <button class="col-1 btn-close ms-auto" style="width: 15px; margin: 0 10px 0 0"
+                                       onclick="deleteNotification(this)" th:id="${notification.id}"></button>
                                 </div>
-                            </div>
 
-                            <div class="card-body">
-                                <p class="card-text three-line-text" th:text="${exercise.body}"></p>
-                                <a th:href="@{/exercises/{id} (id=${exercise.id})}"><em><small>See the full exercise
-                                    post</small></em></a>
+                                <hr/>
                             </div>
                         </div>
-                        <br/>
                     </div>
-                </div>
 
-                <div th:if="${param.get('p') != null && param.p[0] == 'diets' && diets.isEmpty()}"
-                     style="text-align: center">
-                    <span><em class="text-secondary" th:text="'No created diets from ' + ${user.username}"></em></span>
-                </div>
-                <div th:if="${diets != null}">
-                    <div th:each="diet: ${diets}">
-                        <div class="card">
-                            <div class="card-header">
-                                <div class="row">
-                                    <div class="col-sm-10">
-                                        <h4 th:text="${diet.title}"></h4>
+                    <!-- Created Races -->
+                    <div th:if="${param.get('p') != null && param.p[0] == 'races'}">
+                        <h5 th:if="${races.isEmpty()}">There are no races</h5>
+                        <div class="result" th:each="race: ${races}">
+                            <div class="card">
+                                <h4 class="card-header" th:text="${race.title}"></h4>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <img style="width: fit-content; height: 20px" src="/resources/icons/location.svg" alt="Location">
+                                        <h6 style="width:fit-content; left: 20px" th:text="${race.location}"></h6>
                                     </div>
+                                    <div class="row">
+                                        <img style="width: fit-content; height: 20px" src="/resources/icons/date2.svg" alt="Date">
+                                        <h6 style="width:fit-content; left: 20px" th:text="${#dates.format(race.date, 'dd/MM/yyyy')}"></h6>
+                                    </div>
+
+                                    <p class="card-text three-line-text" th:text="${race.description}"></p>
+                                    <a th:href="@{/races/{id} (id=${race.id})}">See the full race post</a>
                                 </div>
+                            </div>
+                            <br/>
+                        </div>
+                    </div>
+
+                    <!-- Created Training Plans -->
+                    <div th:if="${param.get('p') != null && param.p[0] == 'training-plans'}">
+                        <h5 th:if="${trainingPlans.isEmpty()}">There are no training plans</h5>
+                        <div th:each="plan: ${trainingPlans}">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4 th:text="${plan.title}"></h4>
+                                </div>
+
+                                <div class="card-body">
+                                    <p class="card-text three-line-text" th:text="${plan.body}"></p>
+                                    <a th:href="@{/training-plans/{id} (id=${plan.id})}">
+                                        <em><small>See the full training plan</small></em>
+                                    </a>
+                                </div>
+                            </div>
+                            <br/>
+                        </div>
+                    </div>
+
+                    <!-- Created Diets -->
+                    <div th:if="${param.get('p') != null && param.p[0] == 'diets'}">
+                        <h5 th:if="${diets.isEmpty()}">There are no created diets</h5>
+                        <div class="card" th:each="diet: ${diets}" style="margin-bottom: 21px">
+                            <div class="card-header">
+                                <h4 th:text="${diet.title}"></h4>
                             </div>
 
                             <div class="card-body">
@@ -177,30 +190,56 @@
                                 <a th:href="@{/diets/{id} (id=${diet.id})}">See the full diet post</a>
                             </div>
                         </div>
-                        <br/>
                     </div>
-                </div>
 
-                <div th:if="${param.get('p') != null && param.p[0] == 'products' && products.isEmpty()}"
-                     style="text-align: center">
-                    <span><em class="text-secondary" th:text="'No created products from ' + ${user.username}"></em></span>
-                </div>
-                <div th:if="${products != null}">
-                    <div class="row">
-                        <div class="result" style="width: auto" th:each="product: ${products}">
-                            <div class="card"
-                                 style="padding: 10px; height: min-content; width: 300px; cursor: pointer; white-space: nowrap; overflow: hidden;"
-                                 th:onclick="'window.location.href = \'' + @{/products/{id} (id=${product.id})} + '\''">
-                                <img th:src="@{/products/{id}/image (id=${product.id})}" width="278" height="278"
-                                     style="background-color: #ccc">
-                                <strong th:text="${product.name}"></strong>
-                                <span th:text="${product.price} + '€'"></span>
+                    <!-- Created Products -->
+                    <div th:if="${param.get('p') != null && param.p[0] == 'products'}">
+                        <h5 th:if="${products.isEmpty()}">There are no products</h5>
+                        <div th:each="product: ${products}">
+                            <div class="row">
+                                <div class="col-4" style="margin: auto 0">
+                                    <img th:src="@{/products/{id}/image (id=${product.id})}"
+                                         style="background-color: #ccc; width: 100%" alt="product_image">
+                                </div>
+                                <div class="col-8" style="margin: auto 0">
+                                    <div class="row d-flex align-items-center">
+                                        <h4 th:text="${product.name}" style="width: fit-content"></h4>
+                                    </div>
+                                    <div class="d-flex aligns-items-center" style="margin: 10px 0">
+                                        <img th:src="${product.rate>=1}? '/resources/icons/rating.svg': (${product.rate == 0.5}? '/resources/icons/rating-half.svg': '/resources/icons/rating-empty.svg')"
+                                             alt="star" style="width: 21px">
+                                        <img th:src="${product.rate>=2}? '/resources/icons/rating.svg': (${product.rate == 1.5}? '/resources/icons/rating-half.svg': '/resources/icons/rating-empty.svg')"
+                                             alt="star" style="width: 21px">
+                                        <img th:src="${product.rate>=3}? '/resources/icons/rating.svg': (${product.rate == 2.5}? '/resources/icons/rating-half.svg': '/resources/icons/rating-empty.svg')"
+                                             alt="star" style="width: 21px">
+                                        <img th:src="${product.rate>=4}? '/resources/icons/rating.svg': (${product.rate == 3.5}? '/resources/icons/rating-half.svg': '/resources/icons/rating-empty.svg')"
+                                             alt="star" style="width: 21px">
+                                        <img th:src="${product.rate>=5}? '/resources/icons/rating.svg': (${product.rate == 4.5}? '/resources/icons/rating-half.svg': '/resources/icons/rating-empty.svg')"
+                                             alt="star" style="width: 21px">
+                                        <em style="margin-left: 10px"><a style="color: #333333" th:href="${'/user/' + product.coach.username + '?p=products'}" th:text="'by ' + ${product.coach.firstName + ' ' + product.coach.lastName}"></a></em>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <ul class="positive-ul">
+                                                <li th:each="pro: ${product.pros}" th:text="${pro}" class="positive-li"></li>
+                                            </ul>
+                                        </div>
+                                        <div class="col-6">
+                                            <ul class="negative-ul">
+                                                <li th:each="con: ${product.cons}" th:text="${con}" class="negative-li"></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
+
+                            <a th:href="@{/products/{id} (id=${product.id})}" style="float: right; margin-right: 10px"><strong>Full Review</strong></a>
+                            <br/>
+                            <hr/>
                             <br/>
                         </div>
                     </div>
                 </div>
-                <br/>
             </div>
         </div>
     </div>
@@ -210,5 +249,32 @@
     </div>
 </div>
 
+<script>
+    $(document).ready(function () {
+        let page = window.location.search.split("=")[1];
+        if (["races", "training-plans", "diets", "products"].includes(page))
+            $('#created-menu').click();
+    });
+
+    $('#created-menu').click(function () {
+        $('.tab-menu-item').map(function () {
+            this.hidden = $('#created-menu').attr('class').includes('active-menu');
+        });
+        if ($(this).attr('class').includes('active-menu'))
+            $(this).removeClass('active-menu')
+        else
+            $(this).addClass('active-menu')
+    });
+
+    $('#favorites').click(function () {
+        $('.favorites').map(function () {
+            this.hidden = $('#favorites').attr('class').includes('active-menu');
+        });
+        if ($(this).attr('class').includes('active-menu'))
+            $(this).removeClass('active-menu')
+        else
+            $(this).addClass('active-menu')
+    });
+</script>
 </body>
 </html>

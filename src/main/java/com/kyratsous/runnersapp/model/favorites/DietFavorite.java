@@ -2,7 +2,6 @@ package com.kyratsous.runnersapp.model.favorites;
 
 import com.kyratsous.runnersapp.model.Diet;
 import com.kyratsous.runnersapp.model.User;
-import io.micrometer.core.lang.NonNull;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -14,10 +13,10 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "diet_favorites")
 public class DietFavorite extends Favorite {
-    @NonNull
+
     @ManyToOne
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "diet_id")
+    @JoinColumn(name = "diet_id", nullable = false)
     private Diet diet;
 
     public DietFavorite() {}

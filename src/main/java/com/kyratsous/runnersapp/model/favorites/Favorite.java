@@ -8,14 +8,13 @@ import org.hibernate.annotations.OnDeleteAction;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
-import javax.validation.constraints.NotNull;
 
 @MappedSuperclass
 public class Favorite extends BaseEntity {
-    @NotNull
+
     @ManyToOne
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     public Favorite() {}

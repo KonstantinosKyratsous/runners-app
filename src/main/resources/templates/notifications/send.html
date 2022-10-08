@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{navigation-bar :: navbar (~{::body}, ~{::title})}">
+<head>
+    <meta charset="UTF-8">
+    <title>Send Notification</title>
+</head>
+<body>
+
+<div class="container my-2">
+    <div class="row d-flex justify-content-center h-100">
+        <div class="col-12 col-md-9 col-lg-7 col-xl-7">
+            <div class="card shadow p-3 mb-5 bg-body rounded" style="border-radius: 15px;">
+                <div class="card-body p-5">
+                    <h2 class="text-uppercase text-center mb-5"> Create Notification </h2>
+                    <form th:action="@{/notifications/send/{id} (id=${race_id})}" th:object="${notification}" method="post">
+                        <div class="form-outline mb-4">
+                            <input required
+                                   type="text"
+                                   class="form-control form-control-lg"
+                                   th:field="*{title}"
+                                   maxlength="255"
+                                   placeholder="Notification Title">
+                        </div>
+                        <div class="form-outline mb-4">
+                            <textarea required
+                                      class="form-control form-control-lg"
+                                      th:field="*{body}"
+                                      rows="5"
+                                      placeholder="Notification Description"></textarea>
+                        </div>
+
+                        <div class="d-flex justify-content-center">
+                            <button type="submit" class="btn btn-submit" id="createButton">Create Notification</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

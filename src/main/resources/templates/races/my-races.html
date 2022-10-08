@@ -14,14 +14,16 @@
             <div class="card">
                 <div class="card-header">
                     <div class="row">
-                        <div class="col-11">
-                            <h4 class="card-title" th:text="${race.title}"></h4>
+                        <div class="col-10">
+                            <h4 class="card-title one-line-text" th:text="${race.title}"></h4>
                         </div>
-                        <div class="col-1" style="align-content: end">
-                            <a th:href="@{/my-races/{id}/update (id=${race.id})}">
+                        <div class="col-2">
+                            <a th:href="@{/notifications/send/{id} (id=${race.id})}" style="float: right">
+                                <img src="/resources/icons/notify.svg" width="20" alt="notify" title="Send Notification"></a>
+                            <a th:href="@{/my-races/{id}/update (id=${race.id})}" style="float: right">
                                 <img src="/resources/icons/edit.svg" width="20" alt="UpdateButton" title="Update"></a>
                             <a type="button" data-bs-toggle="modal"
-                               th:attr="data-bs-target='#deleteModal'+${race.id}">
+                               th:attr="data-bs-target='#deleteModal'+${race.id}" style="float: right">
                                 <img src="/resources/icons/delete.svg" width="20" alt="deleteButton" title="Delete"></a>
 
                             <!-- Modal -->
@@ -55,12 +57,13 @@
 
                 <div class="card-body">
                     <div class="row">
-                        <img class="col-sm-1" src="/resources/icons/location.svg" alt="Location" height="20px">
-                        <h6 class="col-3" style="left: 30px" th:text="${race.location}"></h6>
+                        <img style="width: fit-content; height: 20px" src="/resources/icons/location.svg" alt="Location">
+                        <h6 style="width:fit-content; left: 20px" th:text="${race.location}"></h6>
                     </div>
                     <div class="row">
-                        <img class="col-1" src="/resources/icons/date2.svg" alt="Date" height="20px">
-                        <h6 class="col-2" style="left: 30px" th:text="${#dates.format(race.date, 'dd/MM/yyyy')}"></h6>
+                        <img style="width: fit-content; height: 20px" src="/resources/icons/date2.svg" alt="Date">
+                        <h6 style="width:fit-content; left: 20px" th:text="${#dates.format(race.date, 'dd/MM/yyyy')}"></h6>
+                        <h6 style="width: fit-content; background-color: red; color: white" th:if="${race.date < #dates.createNow()}">Past Date</h6>
                     </div>
 
                     <p class="card-text three-line-text" th:text="${race.description}"></p>

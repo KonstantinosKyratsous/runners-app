@@ -1,4 +1,4 @@
-<html lang="en" xmlns:th="http://www.thymeleaf.org" th:fragment="navbar (template, title)">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:fragment="navbar (template, title)" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <title th:include="${title}"></title>
 
@@ -27,7 +27,7 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark py-2 shadow" id="navbar_top">
     <div class="container-fluid">
         <a class="navbar-brand" href="/">
-            <img src="/resources/icons/runners.png" alt="Runners" height="35">
+            <img src="/resources/icons/runners.png" alt="Runners" style="height: 35px">
         </a>
 
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
@@ -38,46 +38,71 @@
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ms-auto">
-                <li class="nav-item dropdown">
+                <li class="nav-item dropdown" id="races">
                     <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="">Races</a>
                     <ul class="dropdown-menu dropdown-menu-dark">
                         <li><a class="dropdown-item" href="/races">All Races</a></li>
                         <li><a class="dropdown-item" href="/races?pref=true"
                                th:unless="${#authentication.getPrincipal() == 'anonymousUser'}">Suggested for you</a>
                         </li>
+                        <li><a class="dropdown-item" href="/races?distance=Marathon">Marathons</a></li>
                         <li><a class="dropdown-item" href="/races?sort=most-recent">Upcoming Races</a></li>
                     </ul>
                 </li>
-                <li class="nav-item dropdown">
+                <li class="nav-item dropdown" id="training-plans">
                     <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" aria-current="page"
-                       href="">Exercises</a>
+                       href="">Training Plans</a>
                     <ul class="dropdown-menu dropdown-menu-dark">
-                        <li><a class="dropdown-item" href="/exercises">All Exercises</a></li>
-                        <li><a class="dropdown-item" href="/exercises?pref=true"
+                        <li><a class="dropdown-item" href="/training-plans">All Training Plans</a></li>
+                        <li><a class="dropdown-item" href="/training-plans?pref=true"
                                th:unless="${#authentication.getPrincipal() == 'anonymousUser'}">Suggested for you</a>
                         </li>
                     </ul>
                 </li>
-                <li class="nav-item dropdown">
+                <li class="nav-item dropdown" id="diets">
                     <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="">Diets</a>
                     <ul class="dropdown-menu dropdown-menu-dark">
                         <li><a class="dropdown-item" href="/diets">All Diets</a></li>
                     </ul>
                 </li>
-                <li class="nav-item dropdown">
+                <li class="nav-item dropdown" id="products">
                     <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="">Products</a>
                     <ul class="dropdown-menu dropdown-menu-dark">
                         <li><a class="dropdown-item" href="/products">All Products</a></li>
                         <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="/products?type=Running">Best Running Shoes</a></li>
-                        <li><a class="dropdown-item" href="/products?type=Marathon">Best Marathon Shoes</a></li>
-                        <li><a class="dropdown-item" href="/products?type=Trail">Best Trail Shoes</a></li>
-                        <li><a class="dropdown-item" href="/products?type=Track">Best Track Shoes</a></li>
+                        <li><h5 class="dropdown-item-text">Shoes</h5></li>
+                        <li><a class="dropdown-item" href="/products?category=Shoes&type=Running&order=desc">Best Running Shoes</a></li>
+                        <li><a class="dropdown-item" href="/products?category=Shoes&type=Marathon&order=desc">Best Marathon Shoes</a></li>
+                        <li><a class="dropdown-item" href="/products?category=Shoes&type=Trail&order=desc">Best Trail Shoes</a></li>
+                        <li><a class="dropdown-item" href="/products?category=Shoes&type=Track&order=desc">Best Track Shoes</a></li>
                         <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="/products?type=Activity Trackers">Best Fitness Trackers</a></li>
-                        <li><a class="dropdown-item" href="/products?type=GPS Watches">Best GPS Watches</a></li>
+                        <li><h5 class="dropdown-item-text">Wearables</h5></li>
+                        <li><a class="dropdown-item" href="/products?category=Wearables&type=Activity Trackers&order=desc">Best Fitness Trackers</a></li>
+                        <li><a class="dropdown-item" href="/products?category=Wearables&type=GPS Watches&order=desc">Best GPS Watches</a></li>
                         <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="/products?type=Apparel">Best Running Apparel</a></li>
+                        <li><h5 class="dropdown-item-text">Apparel</h5></li>
+                        <li><a class="dropdown-item" href="/products?category=Apparel&type=Shorts&order=desc">Best Running Shorts</a></li>
+                    </ul>
+                </li>
+                <li th:each="cookie: ${#httpServletRequest.cookies}" class="nav-item dropdown" id="dashboard"
+                    th:if="${cookie.name == 'VIEW-AS' && cookie.value != '' && cookie.value != 'GUEST'}">
+                    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" style="cursor: pointer">Dashboard</a>
+                    <ul class="dropdown-menu dropdown-menu-dark">
+                        <li th:if="${cookie.value.contains('ORGANIZER')}"><a class="dropdown-item" href="/my-races">Manage Registered Races</a></li>
+                        <li th:if="${cookie.value.contains('ORGANIZER')}"><a class="dropdown-item" href="/my-races/new">Register Race</a></li>
+                        <li th:if="${cookie.value.contains('ORGANIZER')}"><a class="dropdown-item" href="/races">All Races</a></li>
+
+                        <li th:if="${cookie.value.contains('COACH')}"><a class="dropdown-item" href="/my-training-plans">Manage Created Training Plans</a></li>
+                        <li th:if="${cookie.value.contains('COACH')}"><a class="dropdown-item" href="/my-training-plans/new">Create Training Plan</a></li>
+                        <li th:if="${cookie.value.contains('COACH')}"><a class="dropdown-item" href="/training-plans">All Training Plans</a></li>
+                        <li th:if="${cookie.value.contains('COACH')}"><hr class="dropdown-divider"></li>
+                        <li th:if="${cookie.value.contains('COACH') || cookie.value.contains('ATHLETE')}"><a class="dropdown-item" href="/my-products">Manage Created Products</a></li>
+                        <li th:if="${cookie.value.contains('COACH') || cookie.value.contains('ATHLETE')}"><a class="dropdown-item" href="/my-products/new">Create Product</a></li>
+                        <li th:if="${cookie.value.contains('COACH') || cookie.value.contains('ATHLETE')}"><a class="dropdown-item" href="/products">All Products</a></li>
+
+                        <li th:if="${cookie.value.contains('NUTRITIONIST')}"><a class="dropdown-item" href="/my-diets">Manage Created Diets</a></li>
+                        <li th:if="${cookie.value.contains('NUTRITIONIST')}"><a class="dropdown-item" href="/my-diets/new">Create Diet</a></li>
+                        <li th:if="${cookie.value.contains('NUTRITIONIST')}"><a class="dropdown-item" href="/diets">All Diets</a></li>
                     </ul>
                 </li>
             </ul>
@@ -88,72 +113,50 @@
                 <li class="nav-item" th:if="${#authentication.getPrincipal() == 'anonymousUser'}">
                     <a class="nav-link" aria-current="page" href="/signup">Sign Up</a>
                 </li>
+
                 <li class="nav-item dropdown" th:unless="${#authentication.getPrincipal() == 'anonymousUser'}">
-                    <a class="nav-link" data-bs-toggle="dropdown" href="">
-                        <img src="/resources/icons/favorites.svg" alt="favorites" height="25">
+                    <a class="nav-link" data-bs-toggle="dropdown" href="" id="notification">
+                        <img src="/resources/icons/notification.svg" alt="favorites" height="25">
                     </a>
-                    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark">
-                        <li><a class="dropdown-item" href="/races/favorites">Races</a></li>
-                        <li><a class="dropdown-item" href="/exercises/favorites">Exercises</a></li>
-                        <li><a class="dropdown-item" href="/diets/favorites">Diets</a></li>
-                        <li><a class="dropdown-item" href="/products/favorites">Products</a></li>
+                    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark" id="notification-wrapper">
+                        <li><small><a style="float: right; margin-right: 10px; color: #888888" href="#" onclick="deleteAllNotifications()">Delete All</a></small></li>
+
                     </ul>
                 </li>
 
-                <div class="nav-item dropdown" th:unless="${#authentication.getPrincipal() == 'anonymousUser'}">
+                <li class="nav-item dropdown" th:unless="${#authentication.getPrincipal() == 'anonymousUser'}">
                     <a class="nav-link dropdown-toggle" href="" data-bs-toggle="dropdown"
                        th:text="${#authentication.getName()}">
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark">
                         <li><a class="dropdown-item" href="/">Home</a></li>
                         <li><a class="dropdown-item" href="/profile">My Profile</a></li>
-                        <li><a class="dropdown-item" href="/favorites">Favorites</a></li>
-                        <div class="dropdown-custom dropstart">
+                        <li>
+                            <a class="dropdown-item" href="#">Favorites</a>
+                            <ul class="dropdown-menu dropdown-menu-dark dropdown-submenu dropdown-submenu-left">
+                                <li><a class="dropdown-item" href="/races/favorites">Races</a></li>
+                                <li><a class="dropdown-item" href="/training-plans/favorites">Training Plans</a></li>
+                                <li><a class="dropdown-item" href="/diets/favorites">Diets</a></li>
+                                <li><a class="dropdown-item" href="/products/favorites">Products</a></li>
+                            </ul>
+
+                        </li>
+                        <li class="dropdown-custom dropstart">
                             <button class="dropdown-item dropbtn dropdown-toggle">View As</button>
                             <div class="dropdown-menu dropdown-menu-end dropdown-menu-dark dropdown-content">
-                                <a class="dropdown-item" onclick="changeViewAs(this)" id="ATHLETE">Athlete</a>
-                                <a class="dropdown-item" onclick="changeViewAs(this)" id="ORGANIZER">Organizer</a>
-                                <a class="dropdown-item" onclick="changeViewAs(this)" id="COACH">Coach</a>
-                                <a class="dropdown-item" onclick="changeViewAs(this)" id="NUTRITIONIST">Nutritionist</a>
+                                <a sec:authorize="hasAuthority('ATHLETE')" class="dropdown-item" onclick="changeViewAs(this)" id="ATHLETE">Athlete</a>
+                                <a sec:authorize="hasAuthority('ORGANIZER')" class="dropdown-item" onclick="changeViewAs(this)" id="ORGANIZER">Organizer</a>
+                                <a sec:authorize="hasAuthority('COACH')" class="dropdown-item" onclick="changeViewAs(this)" id="COACH">Coach</a>
+                                <a sec:authorize="hasAuthority('NUTRITIONIST')" class="dropdown-item" onclick="changeViewAs(this)" id="NUTRITIONIST">Nutritionist</a>
                             </div>
-                        </div>
-                        <li><a class="dropdown-item" href="/my-races/new"
-                               th:if="${#authentication.getAuthorities()[0].getAuthority() == 'ORGANIZER'}">
-                            Create Race</a></li>
-                        <li><a class="dropdown-item" href="/my-races"
-                               th:if="${#authentication.getAuthorities()[0].getAuthority() == 'ORGANIZER'}">
-                            My Races
-                        </a></li>
-                        <li><a class="dropdown-item" href="/my-diets"
-                               th:if="${#authentication.getAuthorities()[0].getAuthority() == 'NUTRITIONIST'}">
-                            My Diets
-                        </a></li>
-                        <li><a class="dropdown-item" href="/my-diets/new"
-                               th:if="${#authentication.getAuthorities()[0].getAuthority() == 'NUTRITIONIST'}">
-                            Create Diet
-                        </a></li>
-                        <li><a class="dropdown-item" href="/my-exercises"
-                               th:if="${#authentication.getAuthorities()[0].getAuthority() == 'COACH'}">
-                            My Exercises
-                        </a></li>
-                        <li><a class="dropdown-item" href="/my-exercises/new"
-                               th:if="${#authentication.getAuthorities()[0].getAuthority() == 'COACH'}">
-                            Create Exercise
-                        </a></li>
-                        <li><a class="dropdown-item" href="/my-products"
-                               th:if="${#authentication.getAuthorities()[0].getAuthority() == 'COACH'}">
-                            Apparel
-                        </a></li>
-                        <li><a class="dropdown-item" href="/my-products/new"
-                               th:if="${#authentication.getAuthorities()[0].getAuthority() == 'COACH'}">
-                            Add Apparel
-                        </a></li>
+                        </li>
+
                         <li>
                             <hr class="dropdown-divider">
                         </li>
                         <li><a class="dropdown-item" href="/logout">Logout</a></li>
                     </ul>
-                </div>
+                </li>
             </ul>
         </div>
     </div>
@@ -162,9 +165,38 @@
 <th:block th:include="${template}"/>
 
 <script>
-    let viewType = document.cookie;
-    if (viewType !== '')
-        document.getElementById(viewType.split("=")[1]).classList.add("active");
+    let viewType;
+    for (let x of document.cookie.split(';')) {
+        if (x.includes('VIEW-AS')) {
+            viewType = x.split('=')[1];
+        }
+    }
+
+    if (!['', 'ADMIN', 'GUEST'].includes(viewType)) {
+        let viewAs = document.getElementById(viewType);
+        if (viewAs != null)
+            viewAs.classList.add("active");
+    }
+
+    $(document).ready(function () {
+
+        if (!['', 'ATHLETE', 'GUEST'].includes(viewType) && viewType !== undefined) {
+            $('#races').hide();
+            $('#training-plans').hide();
+            $('#diets').hide();
+            $('#products').hide();
+
+        }
+        else {
+            if (viewType !== 'ATHLETE')
+                $('#dashboard').hide();
+        }
+
+        if ($('#notification').length > 0)
+            createNotifications();
+    });
+
+
 </script>
 
 </body>

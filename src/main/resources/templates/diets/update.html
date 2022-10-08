@@ -11,13 +11,15 @@
         <div class="col-12 col-md-9 col-lg-7 col-xl-7">
             <div class="card shadow p-3 mb-5 bg-body rounded" style="border-radius: 15px;">
                 <div class="card-body p-5">
-                    <h2 class="text-uppercase text-center mb-5"> Update Race </h2>
+                    <h2 class="text-uppercase text-center mb-5"> Update Diet </h2>
                     <form th:action="@{/my-diets/update}" th:object="${diet}" method="post">
+                        <input type="number" hidden th:field="*{id}">
                         <div class="form-outline mb-4">
                             <input required
                                    type="text"
                                    class="form-control form-control-lg"
                                    th:field="*{title}"
+                                   maxlength="255"
                                    placeholder="Race Title">
                         </div>
 
