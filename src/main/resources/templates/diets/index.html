@@ -8,6 +8,7 @@
 
 <div class="container my-2">
     <div class="col-9 mx-auto">
+        <h5 th:text="${diets.size()} + ' Results'"></h5>
         <div class="card" th:each="diet: ${diets}" style="margin-bottom: 21px">
             <div class="card-header">
                 <h4 th:text="${diet.title}"></h4>
