@@ -34,7 +34,7 @@
 
             <form class="form-group" th:action="@{/diets/{id}/rating (id=${diet.id})}" th:object="${newRating}"
                   method="post">
-                <h4 style="text-align: center">Rate this product</h4>
+                <h4 style="text-align: center">Rate this diet</h4>
                 <div>
                     <input type="hidden" id="selected_rating" name="selected_rating" value="" required="required"
                            th:field="*{rate}">
